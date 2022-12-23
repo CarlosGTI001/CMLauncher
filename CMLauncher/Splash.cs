@@ -27,10 +27,16 @@ namespace CMLauncher
         
         string javapath;
         string minecraftPath;
+        
         public Splash()
         {
             InitializeComponent();
             Settings settings = new Settings();
+            if(settings.UUID == "")
+            {
+                settings.UUID = generador.UUID();
+                settings.Save();
+            }
             javapath = Environment.GetEnvironmentVariable("JAVA_HOME");
             //minecraftPath = settings.minecraftPath;
             minecraftPath = "D:\\.minecraft\\";
@@ -45,6 +51,9 @@ namespace CMLauncher
             esperaDeCargaPesada.Start();
             
         }
+
+        
+
         descargas Versiones = new descargas();
         private void CargaAV(object sender, EsperaDeCarga esperaDeCarga)
         {
@@ -197,7 +206,7 @@ namespace CMLauncher
         private void Load_Load(object sender, EventArgs e)
         {
             barraDeCarga.Style = ProgressBarStyle.Marquee;
-            if (javapath != null)
+            if (javapath == null)
             {
                 MessageBox.Show("Necesitas java para iniciar este launcher", "Alerta");
                 Application.Exit();

@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="Helper\EsperaDeCarga.cs" />
     <Compile Include="Helper\EsperaDeCargaPesada.cs" />
+    <Compile Include="Helper\UUIDGEN.cs" />
     <Compile Include="Splash.cs">
       <SubType>Form</SubType>
     </Compile>
