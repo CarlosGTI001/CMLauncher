@@ -13,14 +13,14 @@ namespace CMLauncher.Modelos
         public Arguments arguments { get; set; }
         public AssetIndex assetIndex { get; set; }
         public string assets { get; set; }
-        public int complianceLevel { get; set; }
+        public string complianceLevel { get; set; }
         public Downloads downloads { get; set; }
         public string id { get; set; }
         public JavaVersion javaVersion { get; set; }
         public List<Library> libraries { get; set; }
         public Logging logging { get; set; }
         public string mainClass { get; set; }
-        public int minimumLauncherVersion { get; set; }
+        public string minimumLauncherVersion { get; set; }
         public DateTime releaseTime { get; set; }
         public DateTime time { get; set; }
         public string type { get; set; }
@@ -86,7 +86,7 @@ namespace CMLauncher.Modelos
     public class JavaVersion
     {
         public string component { get; set; }
-        public int majorVersion { get; set; }
+        public string majorVersion { get; set; }
     }
 
     public class Library

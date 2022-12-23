@@ -148,7 +148,8 @@ namespace CMLauncher
             );
 
             cargar.Wait();
-            var VersionesVerificadas = VerificarInstalados(Versiones, obtenerVersionesInstaladas());
+            List<versionCarpeta> versionesEnCarpeta = obtenerVersionesInstaladas();
+            var VersionesVerificadas = VerificarInstalados(Versiones, versionesEnCarpeta);
             inicio.temp = VersionesVerificadas;
             inicio.Show();
             this.Hide();
@@ -156,14 +157,16 @@ namespace CMLauncher
 
         private descargas VerificarInstalados(descargas versionesSinVerificar, List<versionCarpeta> versionesInstaladas)
         {
-            foreach(var instalado in versionesInstaladas)
+            foreach (var instalado in versionesInstaladas)
             {
-                versiones version = (versiones)versionesSinVerificar.versions.Where(b => b.id == instalado.version).FirstOrDefault();
-                version.descargado = true;
-                versionesSinVerificar.versions.Remove(version);
-                versionesSinVerificar.versions.Add(version);
+                var version = versionesSinVerificar.versions.Where(b => b.id == instalado.version).FirstOrDefault();
+                var index = versionesSinVerificar.versions.IndexOf(version);
+                if (version != null)
+                {
+                    versionesSinVerificar.versions[index].descargado = true;
+
+                }
             }
-            
             return versionesSinVerificar;
         }
 
