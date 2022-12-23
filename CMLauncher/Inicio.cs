@@ -16,6 +16,7 @@ using CMLauncher.Modelos;
 using System.Net;
 using File = System.IO.File;
 using static System.Net.WebRequestMethods;
+using CMLauncher.Properties;
 
 namespace CMLauncher
 {
@@ -26,6 +27,7 @@ namespace CMLauncher
         public string directorioTrabajo = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         public bool Arrastre { get; private set; }
         public descargas temp { get; set; }
+        Settings Settings = new Settings();
         public Inicio()
         {
             InitializeComponent();
@@ -50,6 +52,7 @@ namespace CMLauncher
                     versionesCbx.ValueMember = "url";
                     versionesCbx.DisplayMember = "id";
                 }
+                userName.Text = Settings.userName;
         }
 
         public void cargar()
@@ -188,7 +191,9 @@ namespace CMLauncher
         private void jugarMC_Click(object sender, EventArgs e)
         {
             //si existe la version entonces cambia a jugar, de lo contrario Cambia
-            var version = obtenerUnaVersion(new Uri(versionesCbx.SelectedValue.ToString()));
+            //var version = obtenerUnaVersion(new Uri(versionesCbx.SelectedValue.ToString()));
+            Settings.userName = userName.Text;
+            Settings.Save();
             //string comandos = "";
             //foreach(object objeto in version.arguments.jvm)
             //{
@@ -201,7 +206,7 @@ namespace CMLauncher
             //    game = game + objeto.ToString() + "\n";
             //}
             //MessageBox.Show(game);
-            var archivo = version.downloads.client.file.url;
+            //var archivo = version.downloads.client.file.url;
         }
 
         private void arrastrar_Paint(object sender, PaintEventArgs e)
@@ -220,6 +225,11 @@ namespace CMLauncher
         }
 
         private void Inicio_Deactivate(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
         {
 
         }

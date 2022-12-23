@@ -32,10 +32,11 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.novedades = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.acercaDe = new System.Windows.Forms.Button();
+            this.abrirCarpeta = new System.Windows.Forms.Button();
             this.editarConfiguracionBtn = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.userName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.versionesCbx = new System.Windows.Forms.ComboBox();
@@ -43,7 +44,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.arrastrar = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.novedades)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -94,10 +94,10 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.progressBar1);
-            this.groupBox2.Controls.Add(this.button3);
-            this.groupBox2.Controls.Add(this.button2);
+            this.groupBox2.Controls.Add(this.acercaDe);
+            this.groupBox2.Controls.Add(this.abrirCarpeta);
             this.groupBox2.Controls.Add(this.editarConfiguracionBtn);
-            this.groupBox2.Controls.Add(this.textBox1);
+            this.groupBox2.Controls.Add(this.userName);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.versionesCbx);
@@ -110,36 +110,44 @@
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Configuracion";
+            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
-            // button3
+            // progressBar1
             // 
-            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(133)))), ((int)(((byte)(38)))));
-            this.button3.BackgroundImage = global::CMLauncher.Properties.Resources.info_2_48;
-            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button3.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowText;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.Transparent;
-            this.button3.Location = new System.Drawing.Point(132, 437);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(55, 55);
-            this.button3.TabIndex = 7;
-            this.button3.UseVisualStyleBackColor = false;
+            this.progressBar1.Location = new System.Drawing.Point(0, 510);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(200, 29);
+            this.progressBar1.TabIndex = 8;
             // 
-            // button2
+            // acercaDe
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(133)))), ((int)(((byte)(38)))));
-            this.button2.BackgroundImage = global::CMLauncher.Properties.Resources.folder_3_48;
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.button2.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowText;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.Transparent;
-            this.button2.Location = new System.Drawing.Point(72, 437);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(55, 55);
-            this.button2.TabIndex = 6;
-            this.button2.UseVisualStyleBackColor = false;
+            this.acercaDe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(133)))), ((int)(((byte)(38)))));
+            this.acercaDe.BackgroundImage = global::CMLauncher.Properties.Resources.info_2_48;
+            this.acercaDe.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.acercaDe.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowText;
+            this.acercaDe.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.acercaDe.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.acercaDe.ForeColor = System.Drawing.Color.Transparent;
+            this.acercaDe.Location = new System.Drawing.Point(132, 437);
+            this.acercaDe.Name = "acercaDe";
+            this.acercaDe.Size = new System.Drawing.Size(55, 55);
+            this.acercaDe.TabIndex = 7;
+            this.acercaDe.UseVisualStyleBackColor = false;
+            // 
+            // abrirCarpeta
+            // 
+            this.abrirCarpeta.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(133)))), ((int)(((byte)(38)))));
+            this.abrirCarpeta.BackgroundImage = global::CMLauncher.Properties.Resources.folder_3_48;
+            this.abrirCarpeta.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.abrirCarpeta.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowText;
+            this.abrirCarpeta.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.abrirCarpeta.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.abrirCarpeta.ForeColor = System.Drawing.Color.Transparent;
+            this.abrirCarpeta.Location = new System.Drawing.Point(72, 437);
+            this.abrirCarpeta.Name = "abrirCarpeta";
+            this.abrirCarpeta.Size = new System.Drawing.Size(55, 55);
+            this.abrirCarpeta.TabIndex = 6;
+            this.abrirCarpeta.UseVisualStyleBackColor = false;
             // 
             // editarConfiguracionBtn
             // 
@@ -156,12 +164,12 @@
             this.editarConfiguracionBtn.TabIndex = 5;
             this.editarConfiguracionBtn.UseVisualStyleBackColor = false;
             // 
-            // textBox1
+            // userName
             // 
-            this.textBox1.Location = new System.Drawing.Point(10, 250);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(177, 34);
-            this.textBox1.TabIndex = 4;
+            this.userName.Location = new System.Drawing.Point(10, 250);
+            this.userName.Name = "userName";
+            this.userName.Size = new System.Drawing.Size(177, 34);
+            this.userName.TabIndex = 4;
             // 
             // label2
             // 
@@ -251,13 +259,6 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "CMLauncher";
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(0, 510);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(200, 29);
-            this.progressBar1.TabIndex = 8;
-            // 
             // Inicio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -296,15 +297,15 @@
         private System.Windows.Forms.ComboBox versionesCbx;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox userName;
         private Microsoft.Web.WebView2.WinForms.WebView2 novedades;
         private System.Windows.Forms.Button close;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel arrastrar;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button editarConfiguracionBtn;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button abrirCarpeta;
+        private System.Windows.Forms.Button acercaDe;
         private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

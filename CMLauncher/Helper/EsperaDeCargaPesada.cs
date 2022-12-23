@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace CMLauncher
 {
@@ -51,6 +52,10 @@ namespace CMLauncher
             {
                 Thread.Sleep(2000);
                 SyncContext.Post(e => triggerCallback1(
+                    new Helper.EsperaDeCarga("Algo de información de prueba")
+                ), null);
+                Thread.Sleep(2000);
+                SyncContext.Post(e => triggerCallback2(
                     new Helper.EsperaDeCarga("Algo de información de prueba")
                 ), null);
                 // La tarea heavy task finaliza, así que hay que detenerla.
