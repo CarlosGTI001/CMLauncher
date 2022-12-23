@@ -54,7 +54,7 @@ namespace CMLauncher
                 
             }
             settings.Save();
-            administradorVersiones.obtenerJsonVersion();
+            administradorVersiones.obtenerVersiones();
             //minecraftPath = settings.minecraftPath;
             //habilitar estilos visuales para que la barra de progreso funcione en loop
             Application.EnableVisualStyles();

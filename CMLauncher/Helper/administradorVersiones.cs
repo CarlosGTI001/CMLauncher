@@ -1,7 +1,9 @@
 ﻿using CMLauncher.Modelos;
 using CMLauncher.Properties;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +14,7 @@ namespace CMLauncher.Helper
     static class administradorVersiones
     {
         static Settings Settings = new Settings();
-        static string[] verificarVersiones()
+        static string[] verificarCarpetaVersiones()
         {
             string[] verificarVersiones;
             var path = Path.Combine(Settings.minecraftPath, "versions");
@@ -20,16 +22,33 @@ namespace CMLauncher.Helper
             return verificarVersiones;
         }
 
-        public static string[] obtenerJsonVersion()
+        public static List<versionCarpeta> obtenerVersiones()
         {
-            var Directorios = verificarVersiones();
-            descargarVersion descargarVersion = new descargarVersion();
+            var Directorios = verificarCarpetaVersiones();
+            List<versionCarpeta> versionCarpetas = new List<versionCarpeta>();
+            //descargarVersion descargarVersion = new descargarVersion();
             string[] versionesDisponibles = new string[0];
-            for(var i = 0; i < Directorios.Length; i++)
+            
+            for (var i = 0; i < Directorios.Length; i++)
             {
-                versionesDisponibles = versionesDisponibles.Append(Directorios[i].Split('\\')[7]).ToArray();
+                var version = Directorios[i].Split('\\')[7];
+                var directorioVersion = Directorios[i] + "\\";
+                var json = System.IO.File.ReadAllText(string.Format("{0}{1}.json", directorioVersion, version));
+                    versionCarpetas.Add(new versionCarpeta {
+                        version = version,
+                        carpeta = Directorios[i],
+                        json = JsonConvert.DeserializeObject<descargarVersion>(json)
+                    }
+                );
             }
-            return versionesDisponibles;
+            return versionCarpetas;
+        }
+
+
+        public class versionCarpeta{
+            public string version { get; set; }
+            public string carpeta { get; set; }
+            public descargarVersion json { get; set; }
         }
     }
 }
