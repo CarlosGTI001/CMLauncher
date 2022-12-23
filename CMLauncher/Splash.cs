@@ -19,27 +19,43 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using File = System.IO.File;
+using System.Management;
 
 namespace CMLauncher
 {
     public partial class Splash : Form
     {
-        
+
         string javapath;
-        string minecraftPath;
-        
+        Settings settings = new Settings();
+
         public Splash()
         {
             InitializeComponent();
-            Settings settings = new Settings();
-            if(settings.UUID == "")
+            if (settings.UUID == "")
             {
                 settings.UUID = generador.UUID();
-                settings.Save();
+                
             }
-            javapath = Environment.GetEnvironmentVariable("JAVA_HOME");
+            settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+
+            if (string.IsNullOrEmpty(settings.minecraftPath))
+            {
+                
+                settings.minecraftPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    ".minecraft\\"
+                );
+                if (!Directory.Exists(settings.minecraftPath))
+                {
+                    Directory.CreateDirectory(settings.minecraftPath);
+                }
+                
+                
+            }
+            settings.Save();
+            administradorVersiones.obtenerJsonVersion();
             //minecraftPath = settings.minecraftPath;
-            minecraftPath = "D:\\.minecraft\\";
             //habilitar estilos visuales para que la barra de progreso funcione en loop
             Application.EnableVisualStyles();
             //cargar un ayudante para las operaciones de segundo plano y poder ejecutar el splash de manera correcta
@@ -49,10 +65,10 @@ namespace CMLauncher
             esperaDeCargaPesada.Callback2 += genCarpetas;
             //aca se inicia y se efectua
             esperaDeCargaPesada.Start();
-            
+
         }
 
-        
+
 
         descargas Versiones = new descargas();
         private void CargaAV(object sender, EsperaDeCarga esperaDeCarga)
@@ -138,90 +154,28 @@ namespace CMLauncher
         {
             Task generarCarpetas = Task.Run(() =>
             {
-                if (Directory.Exists(minecraftPath))
-                {
-                    if (Directory.Exists(minecraftPath + "assets"))
-                    {
-                        if(!Directory.Exists(minecraftPath + "assets\\indexes"))
-                        {
-                            Directory.CreateDirectory(minecraftPath + "assets\\indexes");
-                        }
-                        if (!Directory.Exists(minecraftPath + "assets\\objects"))
-                        {
-                            Directory.CreateDirectory(minecraftPath + "assets\\objects");
-                        }
-                        if (!Directory.Exists(minecraftPath + "assets\\objects"))
-                        {
-                            Directory.CreateDirectory(minecraftPath + "assets\\objects");
-                        }
-                        if (!Directory.Exists(minecraftPath + "assets\\skins"))
-                        {
-                            Directory.CreateDirectory(minecraftPath + "assets\\skins");
-                        }
-                    }
-                    else
-                    {
-                        Directory.CreateDirectory(minecraftPath + "assets");
-                        Directory.CreateDirectory(minecraftPath + "assets\\indexes");
-                        Directory.CreateDirectory(minecraftPath + "assets\\log_configs");
-                        Directory.CreateDirectory(minecraftPath + "assets\\objects");
-                        Directory.CreateDirectory(minecraftPath + "assets\\skins");
-                    }
-                    if (!Directory.Exists("libraries"))
-                    {
-                        Directory.CreateDirectory(minecraftPath + "libraries");
-                    }
 
-                    if (!Directory.Exists("logs"))
-                    {
-                        Directory.CreateDirectory(minecraftPath + "logs");
-                    }
-
-                    if (!Directory.Exists("resourcepacks"))
-                    {
-                        Directory.CreateDirectory(minecraftPath + "resourcepacks");
-                    }
-
-                    if (!Directory.Exists("saves"))
-                    {
-                        Directory.CreateDirectory(minecraftPath + "saves");
-                    }
-
-                    if (!Directory.Exists("screenshots"))
-                    {
-                        Directory.CreateDirectory(minecraftPath + "screenshots");
-                    }
-
-                    if (!Directory.Exists("versions"))
-                    {
-                        Directory.CreateDirectory(minecraftPath + "versions");
-                    }
-                }
-                else
-                {
-                    Directory.CreateDirectory(minecraftPath);
-                }
             });
         }
         private void Load_Load(object sender, EventArgs e)
         {
             barraDeCarga.Style = ProgressBarStyle.Marquee;
-            if (javapath == null)
-            {
-                MessageBox.Show("Necesitas java para iniciar este launcher", "Alerta");
-                Application.Exit();
-            }
-            else
-            {
+            //if (!string.IsNullOrEmpty(settings.javaPath))
+            //{
+            //    MessageBox.Show("Necesitas java para iniciar este launcher", "Alerta");
+            //    Application.Exit();
+            //}
+            //else
+            //{
 
-                //string ruta = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\versions\\1.19.3\\";
-                //Process process = new Process();
-                //process.EnableRaisingEvents = false;
-                //process.StartInfo.FileName = "C:\\Program Files\\Java\\jre1.8.0_351" + "\\bin\\javaws.exe"; // aqui ponemos el programa que queremos ejecutar
-                //process.StartInfo.Arguments = ruta + "1.19.3.jar";
-                //process.Start();
-            }
-           
+            //    //string ruta = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\versions\\1.19.3\\";
+            //    //Process process = new Process();
+            //    //process.EnableRaisingEvents = false;
+            //    //process.StartInfo.FileName = "C:\\Program Files\\Java\\jre1.8.0_351" + "\\bin\\javaws.exe"; // aqui ponemos el programa que queremos ejecutar
+            //    //process.StartInfo.Arguments = ruta + "1.19.3.jar";
+            //    //process.Start();
+            //}
+
         }
         Inicio inicio = new Inicio();
 
@@ -233,6 +187,6 @@ namespace CMLauncher
 
         }
 
-        
+
     }
 }
