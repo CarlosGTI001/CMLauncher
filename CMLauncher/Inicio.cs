@@ -17,6 +17,7 @@ using System.Net;
 using File = System.IO.File;
 using static System.Net.WebRequestMethods;
 using CMLauncher.Properties;
+using CMLauncher.Helper;
 
 namespace CMLauncher
 {
@@ -24,9 +25,9 @@ namespace CMLauncher
     {
         private int ex;
         private int ey;
-        public string directorioTrabajo = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         public bool Arrastre { get; private set; }
         public descargas temp { get; set; }
+        public descargarVersion versionDArgs;
         Settings Settings = new Settings();
         public Inicio()
         {
@@ -55,19 +56,19 @@ namespace CMLauncher
                 userName.Text = Settings.userName;
         }
 
-        public void cargar()
-        {
-            //cargar url en el webview novedades
-            //novedades.Source = new Uri("https://www.minecraft.net/es-es");
-            temp = obtenerVersiones();
-            if (temp != null)
-            {
-                versionesCbx.DataSource = temp.versions;
-                versionesCbx.SelectedIndex = 0;
-                versionesCbx.ValueMember = "url";
-                versionesCbx.DisplayMember = "id";
-            }
-        }
+        //public void cargar()
+        //{
+        //    //cargar url en el webview novedades
+        //    //novedades.Source = new Uri("https://www.minecraft.net/es-es");
+        //    temp = obtenerVersiones();
+        //    if (temp != null)
+        //    {
+        //        versionesCbx.DataSource = temp.versions;
+        //        versionesCbx.SelectedIndex = 0;
+        //        versionesCbx.ValueMember = "url";
+        //        versionesCbx.DisplayMember = "id";
+        //    }
+        //}
 
         private void Inicio_Shown(object sender, EventArgs e)
         {
@@ -134,7 +135,7 @@ namespace CMLauncher
 
 
 
-        public descargarVersion obtenerUnaVersion(Uri uri)
+        public descargarVersion obtenerUnaVersion(string uri)
         {
             HttpWebRequest solicitud = (HttpWebRequest)WebRequest.Create(uri);
             using (HttpWebResponse response = (HttpWebResponse)solicitud.GetResponse())
@@ -192,8 +193,7 @@ namespace CMLauncher
         {
             //si existe la version entonces cambia a jugar, de lo contrario Cambia
             //var version = obtenerUnaVersion(new Uri(versionesCbx.SelectedValue.ToString()));
-            Settings.userName = userName.Text;
-            Settings.Save();
+            
             //string comandos = "";
             //foreach(object objeto in version.arguments.jvm)
             //{
@@ -211,7 +211,7 @@ namespace CMLauncher
 
         private void arrastrar_Paint(object sender, PaintEventArgs e)
         {
-
+            
         }
 
         private void Inicio_FormClosed(object sender, FormClosedEventArgs e)
@@ -243,13 +243,39 @@ namespace CMLauncher
                 if (versionDesplegadas.descargado)
                 {
                     jugarMC.Text = "Jugar";
+                    jugarMC.Click += lanzarMinecraft;
                 }
                 else {
                     jugarMC.Text = "Descargar";
+                    jugarMC.Click += descargarMinecraft;
                 }
             }
         }
 
+        Minecraft Minecraft = new Minecraft();
+
+        private void descargarMinecraft(object sender, EventArgs e)
+        {
+            Settings.userName = userName.Text;
+            Settings.Save();
+        }
+
+        private void lanzarMinecraft(object sender, EventArgs e)
+        {
+            Settings.userName = userName.Text;
+            Settings.Save();
+            string uri = ((versiones)versionesCbx.SelectedValue).url;
+            versionDArgs = obtenerUnaVersion(uri);
+            Minecraft.ejecutar(new Minecraft.argumentos
+            {
+                minecraftPath = Settings.minecraftPath,
+                javapath = Settings.javaPath
+            });
+            //versionDArgs.assets
+            
+            //Minecraft.ejecutar();
+        }
+        
         private void versionesCbx_SelectedValueChanged(object sender, EventArgs e)
         {
             if (versionesCbx.SelectedIndex != -1)

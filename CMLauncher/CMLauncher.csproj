@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\administradorVersiones.cs" />
+    <Compile Include="Helper\ejecutar.cs" />
     <Compile Include="Helper\EsperaDeCarga.cs" />
     <Compile Include="Helper\EsperaDeCargaPesada.cs" />
     <Compile Include="Helper\generador.cs" />
