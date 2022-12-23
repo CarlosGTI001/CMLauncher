@@ -202,6 +202,8 @@
             this.versionesCbx.Name = "versionesCbx";
             this.versionesCbx.Size = new System.Drawing.Size(177, 32);
             this.versionesCbx.TabIndex = 1;
+            this.versionesCbx.SelectedIndexChanged += new System.EventHandler(this.versionesCbx_SelectedIndexChanged);
+            this.versionesCbx.SelectedValueChanged += new System.EventHandler(this.versionesCbx_SelectedValueChanged);
             // 
             // close
             // 

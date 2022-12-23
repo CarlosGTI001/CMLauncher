@@ -49,7 +49,7 @@ namespace CMLauncher
                 {
                     versionesCbx.DataSource = temp.versions;
                     versionesCbx.SelectedIndex = 0;
-                    versionesCbx.ValueMember = "url";
+                    //versionesCbx.ValueMember = "url";
                     versionesCbx.DisplayMember = "id";
                 }
                 userName.Text = Settings.userName;
@@ -232,6 +232,39 @@ namespace CMLauncher
         private void groupBox2_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void versionesCbx_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(versionesCbx.SelectedIndex != -1)
+            {
+                var versionSeleccionada = ((versiones)versionesCbx.SelectedValue).id;
+                var versionDesplegadas = temp.versions.Where(a => a.id == versionSeleccionada).FirstOrDefault();
+                if (versionDesplegadas.descargado)
+                {
+                    jugarMC.Text = "Jugar";
+                }
+                else {
+                    jugarMC.Text = "Descargar";
+                }
+            }
+        }
+
+        private void versionesCbx_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (versionesCbx.SelectedIndex != -1)
+            {
+                var versionSeleccionada = ((versiones)versionesCbx.SelectedValue).id;
+                var versionDesplegadas = temp.versions.Where(a => a.id == versionSeleccionada).FirstOrDefault();
+                if (versionDesplegadas.descargado)
+                {
+                    jugarMC.Text = "Jugar";
+                }
+                else
+                {
+                    jugarMC.Text = "Descargar";
+                }
+            }
         }
     }
 }
