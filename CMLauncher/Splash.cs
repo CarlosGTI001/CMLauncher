@@ -20,6 +20,7 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using File = System.IO.File;
 using System.Management;
+using static CMLauncher.Helper.administradorVersiones;
 
 namespace CMLauncher
 {
@@ -54,7 +55,7 @@ namespace CMLauncher
                 
             }
             settings.Save();
-            administradorVersiones.obtenerVersiones();
+            administradorVersiones.obtenerVersionesInstaladas();
             //minecraftPath = settings.minecraftPath;
             //habilitar estilos visuales para que la barra de progreso funcione en loop
             Application.EnableVisualStyles();
@@ -117,6 +118,7 @@ namespace CMLauncher
                                 file.Write(PreJson);
                                 file.Close();
                                 Versiones = JsonConvert.DeserializeObject<descargas>(PreJson);
+                                
                             }
                         }
                     }
@@ -144,12 +146,27 @@ namespace CMLauncher
                 }
             }
             );
-            cargar.Wait();
-            inicio.temp = Versiones;
 
+            cargar.Wait();
+            var VersionesVerificadas = VerificarInstalados(Versiones, obtenerVersionesInstaladas());
+            inicio.temp = VersionesVerificadas;
             inicio.Show();
             this.Hide();
         }
+
+        private descargas VerificarInstalados(descargas versionesSinVerificar, List<versionCarpeta> versionesInstaladas)
+        {
+            foreach(var instalado in versionesInstaladas)
+            {
+                versiones version = (versiones)versionesSinVerificar.versions.Where(b => b.id == instalado.version).FirstOrDefault();
+                version.descargado = true;
+                versionesSinVerificar.versions.Remove(version);
+                versionesSinVerificar.versions.Add(version);
+            }
+            
+            return versionesSinVerificar;
+        }
+
         public void genCarpetas(object sender, EsperaDeCarga esperaDeCarga)
         {
             Task generarCarpetas = Task.Run(() =>

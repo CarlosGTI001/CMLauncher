@@ -13,5 +13,6 @@ namespace CMLauncher.Modelos
         public string url { get; set; }
         public DateTime time { get; set; }
         public DateTime releaseTime { get; set; }
+        public bool descargado { get; set; } = false;
     }
 }
