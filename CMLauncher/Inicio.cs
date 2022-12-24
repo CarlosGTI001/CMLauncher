@@ -18,6 +18,8 @@ using File = System.IO.File;
 using static System.Net.WebRequestMethods;
 using CMLauncher.Properties;
 using CMLauncher.Helper;
+using static CMLauncher.Helper.Minecraft;
+using System.Diagnostics;
 
 namespace CMLauncher
 {
@@ -207,6 +209,52 @@ namespace CMLauncher
             //}
             //MessageBox.Show(game);
             //var archivo = version.downloads.client.file.url;
+            if(jugarMC.Text == "Jugar")
+            {
+                Settings.userName = userName.Text;
+                Settings.Save();
+                string uri = ((versiones)versionesCbx.SelectedValue).url;
+                var version = ((versiones)versionesCbx.SelectedValue).id;
+                //var version = Directorios[i].Split('\\')[7];
+                //var directorioVersion = Directorios[i] + "\\";
+                var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
+                versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
+                var comando = Minecraft.ejecutar(new Minecraft.argumentos
+                {
+                    minecraftPath = Settings.minecraftPath,
+                    javapath = Settings.javaPath,
+                    verWindows = "10.0",
+                    LauncherBrand = "CMLauncher",
+                    LauncherVersion = "0.0.1",
+                    Xmx = Settings.ramMB,
+                    Xmn = Settings.ramMB - (Settings.ramMB / 2),
+                    Librerias = versionDArgs.libraries,
+                    UserName = userName.Text,
+                    version = version,
+                    tipoVersion = versionDArgs.type,
+                    assetIndex = versionDArgs.assetIndex.id,
+                    uuid = Settings.UUID,
+                    gameJar = Settings.minecraftPath + "versions\\" + version + "\\" + version + ".jar"
+                });
+                /*Minecraft.ExecuteCommand(comando + "\n pause");*/
+
+
+                Process process = new Process();
+                process.EnableRaisingEvents = false;
+                process.StartInfo.FileName = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\runtime\\java-runtime-beta\\windows\\java-runtime-beta\\bin\\javaw.exe";
+                //process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
+                process.StartInfo.Arguments = comando;
+                process.Start();
+
+                //var cmdLine = Settings.javaPath + "\\bin\\javaw.exe " + comando;
+                //Console.WriteLine(cmdLine);
+                //versionDArgs.assets
+                //Minecraft.ejecutar();
+            }
+            else
+            {
+                MessageBox.Show("Debes descargar la version");
+            }
         }
 
         private void arrastrar_Paint(object sender, PaintEventArgs e)
@@ -243,11 +291,9 @@ namespace CMLauncher
                 if (versionDesplegadas.descargado)
                 {
                     jugarMC.Text = "Jugar";
-                    jugarMC.Click += lanzarMinecraft;
                 }
                 else {
                     jugarMC.Text = "Descargar";
-                    jugarMC.Click += descargarMinecraft;
                 }
             }
         }
@@ -262,18 +308,7 @@ namespace CMLauncher
 
         private void lanzarMinecraft(object sender, EventArgs e)
         {
-            Settings.userName = userName.Text;
-            Settings.Save();
-            string uri = ((versiones)versionesCbx.SelectedValue).url;
-            versionDArgs = obtenerUnaVersion(uri);
-            Minecraft.ejecutar(new Minecraft.argumentos
-            {
-                minecraftPath = Settings.minecraftPath,
-                javapath = Settings.javaPath
-            });
-            //versionDArgs.assets
             
-            //Minecraft.ejecutar();
         }
         
         private void versionesCbx_SelectedValueChanged(object sender, EventArgs e)

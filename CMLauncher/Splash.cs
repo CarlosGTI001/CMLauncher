@@ -189,11 +189,7 @@ namespace CMLauncher
             //{
 
             //    //string ruta = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\versions\\1.19.3\\";
-            //    //Process process = new Process();
-            //    //process.EnableRaisingEvents = false;
-            //    //process.StartInfo.FileName = "C:\\Program Files\\Java\\jre1.8.0_351" + "\\bin\\javaws.exe"; // aqui ponemos el programa que queremos ejecutar
-            //    //process.StartInfo.Arguments = ruta + "1.19.3.jar";
-            //    //process.Start();
+            
             //}
 
         }
