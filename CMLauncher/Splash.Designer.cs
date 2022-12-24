@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Splash));
             this.barraDeCarga = new System.Windows.Forms.ProgressBar();
             this.label1 = new System.Windows.Forms.Label();
+            this.segundoPlano = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // barraDeCarga
@@ -53,6 +54,11 @@
             this.label1.Size = new System.Drawing.Size(592, 108);
             this.label1.TabIndex = 1;
             this.label1.Text = "CMLauncher";
+            // 
+            // segundoPlano
+            // 
+            this.segundoPlano.DoWork += new System.ComponentModel.DoWorkEventHandler(this.segundoPlano_DoWork);
+            this.segundoPlano.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.segundoPlano_RunWorkerCompleted);
             // 
             // Splash
             // 
@@ -81,5 +87,6 @@
 
         private System.Windows.Forms.ProgressBar barraDeCarga;
         private System.Windows.Forms.Label label1;
+        private System.ComponentModel.BackgroundWorker segundoPlano;
     }
 }

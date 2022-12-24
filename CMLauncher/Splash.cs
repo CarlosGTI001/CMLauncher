@@ -55,24 +55,24 @@ namespace CMLauncher
                 
             }
             settings.Save();
-            administradorVersiones.obtenerVersionesInstaladas();
+            //administradorVersiones.obtenerVersionesInstaladas();
             //minecraftPath = settings.minecraftPath;
             //habilitar estilos visuales para que la barra de progreso funcione en loop
             Application.EnableVisualStyles();
             //cargar un ayudante para las operaciones de segundo plano y poder ejecutar el splash de manera correcta
-            EsperaDeCargaPesada esperaDeCargaPesada = new EsperaDeCargaPesada();
-            //se agrega a traves de un evento la actividad a realizar
-            esperaDeCargaPesada.Callback1 += CargaAV;
-            esperaDeCargaPesada.Callback2 += genCarpetas;
-            //aca se inicia y se efectua
-            esperaDeCargaPesada.Start();
+            //EsperaDeCargaPesada esperaDeCargaPesada = new EsperaDeCargaPesada();
+            ////se agrega a traves de un evento la actividad a realizar
+            //esperaDeCargaPesada.Callback1 += CargaAV;
+            //esperaDeCargaPesada.Callback2 += genCarpetas;
+            ////aca se inicia y se efectua
+            //esperaDeCargaPesada.Start();
 
         }
 
 
 
-        descargas Versiones = new descargas();
-        private void CargaAV(object sender, EsperaDeCarga esperaDeCarga)
+        
+        private descargas CargaAV()
         {
             Task cargar = Task.Run(() =>
             {
@@ -149,10 +149,7 @@ namespace CMLauncher
 
             cargar.Wait();
             List<versionCarpeta> versionesEnCarpeta = obtenerVersionesInstaladas();
-            var VersionesVerificadas = VerificarInstalados(Versiones, versionesEnCarpeta);
-            inicio.temp = VersionesVerificadas;
-            inicio.Show();
-            this.Hide();
+            return VerificarInstalados(Versiones, versionesEnCarpeta);
         }
 
         private descargas VerificarInstalados(descargas versionesSinVerificar, List<versionCarpeta> versionesInstaladas)
@@ -193,16 +190,28 @@ namespace CMLauncher
             //}
 
         }
-        Inicio inicio = new Inicio();
-
-        private BackgroundWorker bw = new BackgroundWorker();
+        
 
         private void Load_Shown(object sender, EventArgs e)
         {
 
-
+            if (!segundoPlano.IsBusy)
+            {
+                segundoPlano.RunWorkerAsync();
+            }
+        }
+        descargas Versiones = new descargas();
+        private void segundoPlano_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Versiones = CargaAV();
         }
 
-
+        private void segundoPlano_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Inicio inicio = new Inicio();
+            inicio.temp = Versiones;
+            inicio.Show();
+            this.Hide();
+        }
     }
 }
