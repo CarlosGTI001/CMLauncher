@@ -245,7 +245,9 @@ namespace CMLauncher
                 //process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
                 process.StartInfo.Arguments = comando;
                 process.Start();
-
+                this.Hide();
+                process.WaitForExit();
+                this.Show();
                 //var cmdLine = Settings.javaPath + "\\bin\\javaw.exe " + comando;
                 //Console.WriteLine(cmdLine);
                 //versionDArgs.assets
