@@ -27,7 +27,7 @@
       <Value Profile="(Default)">720</Value>
     </Setting>
     <Setting Name="minecraftPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">null</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="userName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Player</Value>
