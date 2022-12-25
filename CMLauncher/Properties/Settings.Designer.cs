@@ -121,7 +121,7 @@ namespace CMLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("null")]
         public string minecraftPath {
             get {
                 return ((string)(this["minecraftPath"]));
@@ -145,7 +145,7 @@ namespace CMLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("no")]
+        [global::System.Configuration.DefaultSettingValueAttribute("si")]
         public string fullScreen {
             get {
                 return ((string)(this["fullScreen"]));

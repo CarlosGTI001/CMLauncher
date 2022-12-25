@@ -39,7 +39,7 @@ namespace CMLauncher.Helper
             argumentos = argumentos.Append(" -XX:+UnlockExperimentalVMOptions").ToArray();
             argumentos = argumentos.Append(" -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M").ToArray();
             argumentos = argumentos.Append(" -Dlog4j.configurationFile=" + log_configs[0] + " net.minecraft.client.main.Main").ToArray();
-            argumentos = argumentos.Append(" --userName "+_argumentos.UserName).ToArray();
+            argumentos = argumentos.Append(" --username "+_argumentos.UserName).ToArray();
             argumentos = argumentos.Append(" --version " +_argumentos.version).ToArray();
             argumentos = argumentos.Append(" --gameDir " + _argumentos.minecraftPath).ToArray();
             argumentos = argumentos.Append(" --assetsDir " + _argumentos.minecraftPath + "assets\\").ToArray();

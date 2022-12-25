@@ -36,6 +36,7 @@ namespace CMLauncher.Helper
             var minecraftPath = Configuracion.minecraftPath;
             try
             {
+                volver:
                 if (Directory.Exists(minecraftPath))
                 {
                     if (Directory.Exists(minecraftPath + "assets"))
@@ -98,6 +99,7 @@ namespace CMLauncher.Helper
                 else
                 {
                     Directory.CreateDirectory(minecraftPath);
+                    goto volver;
                 }
 
                 return true;

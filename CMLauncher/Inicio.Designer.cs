@@ -149,6 +149,7 @@
             this.abrirCarpeta.Size = new System.Drawing.Size(55, 55);
             this.abrirCarpeta.TabIndex = 6;
             this.abrirCarpeta.UseVisualStyleBackColor = false;
+            this.abrirCarpeta.Click += new System.EventHandler(this.abrirCarpeta_Click);
             // 
             // editarConfiguracionBtn
             // 

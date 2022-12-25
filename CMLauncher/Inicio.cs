@@ -236,6 +236,22 @@ namespace CMLauncher
                     uuid = Settings.UUID,
                     gameJar = Settings.minecraftPath + "versions\\" + version + "\\" + version + ".jar"
                 });
+                FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
+                StreamReader streamReader = new StreamReader(configuracion);
+                var _configuracion = streamReader.ReadToEnd();
+                if (Settings.fullScreen == "si" && _configuracion.Contains("fullscreen:false"))
+                {
+                    _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
+                }
+                if(Settings.fullScreen == "no" && _configuracion.Contains("fullscreen:true"))
+                {
+                    _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
+                }
+                StreamWriter guardar = new StreamWriter(configuracion);
+                guardar.Write(_configuracion);
+                guardar.Close();
+                configuracion.Close();
+                streamReader.Close();
                 /*Minecraft.ExecuteCommand(comando + "\n pause");*/
 
 
@@ -328,6 +344,11 @@ namespace CMLauncher
                     jugarMC.Text = "Descargar";
                 }
             }
+        }
+
+        private void abrirCarpeta_Click(object sender, EventArgs e)
+        {
+            Process abrirCarpetaDeMC = Process.Start(Settings.minecraftPath);
         }
     }
 }

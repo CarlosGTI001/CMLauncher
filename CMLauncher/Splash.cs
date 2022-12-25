@@ -40,7 +40,7 @@ namespace CMLauncher
             }
             settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
 
-            if (string.IsNullOrEmpty(settings.minecraftPath))
+            if (string.IsNullOrEmpty(settings.minecraftPath) || settings.minecraftPath == "null")
             {
                 
                 settings.minecraftPath = Path.Combine(
@@ -51,8 +51,6 @@ namespace CMLauncher
                 {
                     Directory.CreateDirectory(settings.minecraftPath);
                 }
-                
-                
             }
             settings.Save();
             //administradorVersiones.obtenerVersionesInstaladas();

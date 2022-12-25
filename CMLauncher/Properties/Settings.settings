@@ -27,13 +27,13 @@
       <Value Profile="(Default)">720</Value>
     </Setting>
     <Setting Name="minecraftPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">null</Value>
     </Setting>
     <Setting Name="userName" Type="System.String" Scope="User">
       <Value Profile="(Default)">Player</Value>
     </Setting>
     <Setting Name="fullScreen" Type="System.String" Scope="User">
-      <Value Profile="(Default)">no</Value>
+      <Value Profile="(Default)">si</Value>
     </Setting>
     <Setting Name="UUID" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
