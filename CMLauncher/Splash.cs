@@ -150,16 +150,44 @@ namespace CMLauncher
 
         private descargas VerificarInstalados(descargas versionesSinVerificar, List<versionCarpeta> versionesInstaladas)
         {
-            foreach (var instalado in versionesInstaladas)
+            foreach (var l in versionesSinVerificar.versions)
             {
-                var version = versionesSinVerificar.versions.Where(b => b.id == instalado.version).FirstOrDefault();
-                var index = versionesSinVerificar.versions.IndexOf(version);
-                if (version != null)
+                var index = versionesSinVerificar.versions.IndexOf(l);
+                versionesSinVerificar.versions[index].descargado = false;
+            }
+            if(versionesInstaladas.Count != 0)
+            {
+                foreach (var instalado in versionesInstaladas)
                 {
-                    versionesSinVerificar.versions[index].descargado = true;
-
+                    var version = versionesSinVerificar.versions.Where(b => b.id == instalado.version).FirstOrDefault();
+                    var index = versionesSinVerificar.versions.IndexOf(version);
+                    if (version != null)
+                    {
+                        versionesSinVerificar.versions[index].descargado = true;
+                    }
                 }
             }
+            
+            //if()
+            //{
+            //    foreach(var l in versionesSinVerificar.versions){
+            //        var index = versionesSinVerificar.versions.IndexOf(l);
+            //        versionesSinVerificar.versions[index].descargado = false;
+            //    }
+            //}
+            //else
+            //{
+            //    //foreach(var l in versionesInstaladas)
+            //    //{
+            //    //    for(int i = 0; i < versionesSinVerificar.versions.Count; i++)
+            //    //    {
+            //    //        if(versionesSinVerificar.versions[i].id == l.version)
+            //    //        {
+            //    //            versionesSinVerificar.versions[i]
+            //    //        }
+            //    //    }
+            //    //}
+            //}
             return versionesSinVerificar;
         }
 
@@ -204,8 +232,24 @@ namespace CMLauncher
 
         private void segundoPlano_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            
             Inicio inicio = new Inicio();
-            inicio.temp = Versiones;
+            //foreach(Form formulariosAbiertos in Application.OpenForms)
+            //{
+            //    if(formulariosAbiertos.GetType() == typeof(Inicio))
+            //    {
+            //        formulariosAbiertos.Dispose();
+            //        inicio = new Inicio();
+            //        inicio.temp = CargaAV();
+            //        inicio.Show();
+            //        goto salir;
+            //    }
+            //    else
+            //    {
+
+            //    }
+            //}
+            inicio.temp = CargaAV();
             inicio.Show();
             this.Hide();
         }

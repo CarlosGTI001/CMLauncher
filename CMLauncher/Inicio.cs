@@ -20,6 +20,7 @@ using CMLauncher.Properties;
 using CMLauncher.Helper;
 using static CMLauncher.Helper.Minecraft;
 using System.Diagnostics;
+using static CMLauncher.Helper.administradorVersiones;
 
 namespace CMLauncher
 {
@@ -47,7 +48,7 @@ namespace CMLauncher
             Form form1 = this;
             Settings Settings = new Settings();
             //cargar url en el webview novedades
-            //this.Invoke(new MethodInvoker(()=> novedades.Source = new Uri("https://www.minecraft.net/es-es")));
+            this.Invoke(new MethodInvoker(()=> novedades.Source = new Uri("https://www.minecraft.net/es-es")));
             if (temp != null)
                 {
                     versionesCbx.DataSource = temp.versions;
@@ -81,7 +82,6 @@ namespace CMLauncher
         {
             try
             {
-
                 StreamReader reader;
                 var uri = "https://launchermeta.mojang.com/mc/game/version_manifest.json";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
@@ -135,7 +135,27 @@ namespace CMLauncher
             }
         }
 
-
+        private descargas VerificarInstalados(descargas versionesSinVerificar, List<versionCarpeta> versionesInstaladas)
+        {
+            foreach (var l in versionesSinVerificar.versions)
+            {
+                var index = versionesSinVerificar.versions.IndexOf(l);
+                versionesSinVerificar.versions[index].descargado = false;
+            }
+            if (versionesInstaladas.Count != 0)
+            {
+                foreach (var instalado in versionesInstaladas)
+                {
+                    var version = versionesSinVerificar.versions.Where(b => b.id == instalado.version).FirstOrDefault();
+                    var index = versionesSinVerificar.versions.IndexOf(version);
+                    if (version != null)
+                    {
+                        versionesSinVerificar.versions[index].descargado = true;
+                    }
+                }
+            }
+            return versionesSinVerificar;
+        }
 
         public descargarVersion obtenerUnaVersion(string uri)
         {
@@ -358,6 +378,20 @@ namespace CMLauncher
         {
             Configuracion configuracion = new Configuracion();
             configuracion.ShowDialog();
+            temp = VerificarInstalados(temp, obtenerVersionesInstaladas());
+            if (temp != null)
+            {
+                versionesCbx.DataSource = temp.versions;
+                versionesCbx.SelectedIndex = 1;
+                versionesCbx.SelectedIndex = 0;
+                versionesCbx.DisplayMember = "id";
+            }
+        }
+
+        private void acercaDe_Click(object sender, EventArgs e)
+        {
+            info info = new info();
+            info.ShowDialog();
         }
     }
 }

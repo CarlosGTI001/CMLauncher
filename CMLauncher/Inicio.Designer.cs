@@ -134,6 +134,7 @@
             this.acercaDe.Size = new System.Drawing.Size(55, 55);
             this.acercaDe.TabIndex = 7;
             this.acercaDe.UseVisualStyleBackColor = false;
+            this.acercaDe.Click += new System.EventHandler(this.acercaDe_Click);
             // 
             // abrirCarpeta
             // 

@@ -13,9 +13,11 @@ namespace CMLauncher.Helper
 {
     static class administradorVersiones
     {
-        static Settings Settings = new Settings();
+        
         public static List<versionCarpeta> obtenerVersionesInstaladas()
         {
+            Settings Settings = new Settings();
+            generador.generarCarpetas();
             string[] verificarVersiones;
             var path = Path.Combine(Settings.minecraftPath, "versions");
             var Directorios = Directory.GetDirectories(path);

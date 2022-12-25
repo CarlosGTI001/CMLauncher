@@ -130,10 +130,17 @@
     </Compile>
     <Compile Include="Helper\administradorVersiones.cs" />
     <Compile Include="Helper\configMgr.cs" />
+    <Compile Include="Helper\descargarArchivos.cs" />
     <Compile Include="Helper\ejecutar.cs" />
     <Compile Include="Helper\EsperaDeCarga.cs" />
     <Compile Include="Helper\EsperaDeCargaPesada.cs" />
     <Compile Include="Helper\generador.cs" />
+    <Compile Include="info.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="info.Designer.cs">
+      <DependentUpon>info.cs</DependentUpon>
+    </Compile>
     <Compile Include="Splash.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Configuracion.resx">
       <DependentUpon>Configuracion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="info.resx">
+      <DependentUpon>info.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Splash.resx">
       <DependentUpon>Splash.cs</DependentUpon>
