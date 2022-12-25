@@ -30,7 +30,7 @@ namespace CMLauncher
         public bool Arrastre { get; private set; }
         public descargas temp { get; set; }
         public descargarVersion versionDArgs;
-        Settings Settings = new Settings();
+        
         public Inicio()
         {
             InitializeComponent();
@@ -45,10 +45,10 @@ namespace CMLauncher
         private void Inicio_Load(object sender, EventArgs e)
         {
             Form form1 = this;
-            
-                //cargar url en el webview novedades
-                //this.Invoke(new MethodInvoker(()=> novedades.Source = new Uri("https://www.minecraft.net/es-es")));
-                if (temp != null)
+            Settings Settings = new Settings();
+            //cargar url en el webview novedades
+            //this.Invoke(new MethodInvoker(()=> novedades.Source = new Uri("https://www.minecraft.net/es-es")));
+            if (temp != null)
                 {
                     versionesCbx.DataSource = temp.versions;
                     versionesCbx.SelectedIndex = 0;
@@ -211,6 +211,7 @@ namespace CMLauncher
             //var archivo = version.downloads.client.file.url;
             if(jugarMC.Text == "Jugar")
             {
+                Settings Settings = new Settings();
                 Settings.userName = userName.Text;
                 Settings.Save();
                 string uri = ((versiones)versionesCbx.SelectedValue).url;
@@ -239,11 +240,11 @@ namespace CMLauncher
                 FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
                 StreamReader streamReader = new StreamReader(configuracion);
                 var _configuracion = streamReader.ReadToEnd();
-                if (Settings.fullScreen == "si" && _configuracion.Contains("fullscreen:false"))
+                if (Settings.fullScreen == true && _configuracion.Contains("fullscreen:false"))
                 {
                     _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
                 }
-                if(Settings.fullScreen == "no" && _configuracion.Contains("fullscreen:true"))
+                if(Settings.fullScreen == false && _configuracion.Contains("fullscreen:true"))
                 {
                     _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
                 }
@@ -320,6 +321,7 @@ namespace CMLauncher
 
         private void descargarMinecraft(object sender, EventArgs e)
         {
+            Settings Settings = new Settings();
             Settings.userName = userName.Text;
             Settings.Save();
         }
@@ -348,7 +350,14 @@ namespace CMLauncher
 
         private void abrirCarpeta_Click(object sender, EventArgs e)
         {
+            Settings Settings = new Settings();
             Process abrirCarpetaDeMC = Process.Start(Settings.minecraftPath);
+        }
+
+        private void editarConfiguracionBtn_Click(object sender, EventArgs e)
+        {
+            Configuracion configuracion = new Configuracion();
+            configuracion.ShowDialog();
         }
     }
 }

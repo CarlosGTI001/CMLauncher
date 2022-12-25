@@ -165,9 +165,12 @@
             this.editarConfiguracionBtn.Size = new System.Drawing.Size(55, 55);
             this.editarConfiguracionBtn.TabIndex = 5;
             this.editarConfiguracionBtn.UseVisualStyleBackColor = false;
+            this.editarConfiguracionBtn.Click += new System.EventHandler(this.editarConfiguracionBtn_Click);
             // 
             // userName
             // 
+            this.userName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.userName.ForeColor = System.Drawing.Color.White;
             this.userName.Location = new System.Drawing.Point(10, 250);
             this.userName.Name = "userName";
             this.userName.Size = new System.Drawing.Size(177, 34);
@@ -197,8 +200,13 @@
             // 
             // versionesCbx
             // 
+            this.versionesCbx.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.versionesCbx.DropDownWidth = 177;
             this.versionesCbx.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F);
+            this.versionesCbx.ForeColor = System.Drawing.Color.White;
             this.versionesCbx.FormattingEnabled = true;
+            this.versionesCbx.IntegralHeight = false;
+            this.versionesCbx.ItemHeight = 24;
             this.versionesCbx.Location = new System.Drawing.Point(10, 327);
             this.versionesCbx.Name = "versionesCbx";
             this.versionesCbx.Size = new System.Drawing.Size(177, 32);
@@ -277,6 +285,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Inicio";
+            this.RightToLeftLayout = true;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "CMLauncher";
             this.Deactivate += new System.EventHandler(this.Inicio_Deactivate);

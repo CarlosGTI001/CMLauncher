@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Threading.Tasks;
-
-
-
+using System.Windows.Forms;
 
 namespace CMLauncher.Helper
 {
     static class generador
     {
         static Settings Configuracion = new Settings();
+        
         public static string UUID()
         {
             //////////////////////////////////////////////////////////////
@@ -108,6 +108,19 @@ namespace CMLauncher.Helper
             {
                 return false;
             }
+        }
+
+
+        public static long RAMinMB()
+        {
+            long SlotRam = 0;
+            ManagementObjectSearcher mgtObj = new ManagementObjectSearcher("Select * from Win32_PhysicalMemory");
+            var objeto = mgtObj.Get();
+            foreach (ManagementObject obj in mgtObj.Get())
+            {
+                SlotRam = SlotRam + long.Parse(obj["Capacity"].ToString());
+            }
+            return SlotRam/1048576;
         }
     }
 }

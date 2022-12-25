@@ -26,8 +26,6 @@ namespace CMLauncher
 {
     public partial class Splash : Form
     {
-
-        string javapath;
         Settings settings = new Settings();
 
         public Splash()
@@ -165,13 +163,13 @@ namespace CMLauncher
             return versionesSinVerificar;
         }
 
-        public void genCarpetas(object sender, EsperaDeCarga esperaDeCarga)
-        {
-            Task generarCarpetas = Task.Run(() =>
-            {
+        //public void genCarpetas(object sender, EsperaDeCarga esperaDeCarga)
+        //{
+        //    Task generarCarpetas = Task.Run(() =>
+        //    {
 
-            });
-        }
+        //    });
+        //}
         private void Load_Load(object sender, EventArgs e)
         {
             barraDeCarga.Style = ProgressBarStyle.Marquee;
