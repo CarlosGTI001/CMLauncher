@@ -56,7 +56,7 @@ namespace CMLauncher.Helper
         public class ArchivosAsset
         {
             public string hash;
-            public int size;
+            public double size;
         }
 
         public void Assets()

@@ -33,8 +33,8 @@ namespace CMLauncher
         public descargarVersion versionDArgs;
         string versionUrl = "";
 
-        float MBTotal;
-        float MBCurso;
+        double MBTotal;
+        double MBCurso;
         public Inicio()
         {
             InitializeComponent();
@@ -302,6 +302,7 @@ namespace CMLauncher
             else
             {
                 descargaBar.Style = ProgressBarStyle.Marquee;
+                cancelar.Enabled = true;
                 descargando.RunWorkerAsync();
             }
         }
@@ -420,6 +421,8 @@ namespace CMLauncher
             Descargar descargar = new Descargar();
             descargarVersion descargarVersion = new descargarVersion();
             Settings Settings = new Settings();
+            jugarMC.Enabled = false;
+            jugarMC.Text = "Inicio...";
             var url = versionUrl;
             WebClient webClient = new WebClient();
             var json = webClient.DownloadString(url);
@@ -428,10 +431,12 @@ namespace CMLauncher
             var assets = descargar.ObtenerIndexAsset(url, descargarVersion, minecraftPath);
             cantidad = assets.Count();
             descargando.WorkerReportsProgress = true;
+            descargando.WorkerSupportsCancellation = true;
             descargando.ReportProgress(0);
             var i = 0;
             cantidad = assets.Count();
             cambiar = false;
+            MBTotal = (assets.Select(a=>a.size).Sum() / 1024)/1024;
             foreach (var asset in assets)
             {
                 var firstPath = asset.hash.Substring(0, 2);
@@ -440,6 +445,11 @@ namespace CMLauncher
                 var urlDescarga = urlInicial + "/" +firstPath + "/" + fileName;
                 var path = Settings.minecraftPath + "assets\\objects\\" + firstPath + "" +
                     "\\";
+                MBCurso += Math.Round((((asset.size)/1024)/1024), 2);
+                int newSize = 12;
+                jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize);
+                jugarMC.ForeColor = Color.White;
+                jugarMC.Text = "" + MBCurso + "MB";
                 crearPath:
                 if (Directory.Exists(path))
                 {
@@ -453,8 +463,6 @@ namespace CMLauncher
                     Directory.CreateDirectory(path);
                     goto crearPath;
                 }
-                
-                
                 descargando.ReportProgress(i);
                 i++;
             }
@@ -489,6 +497,14 @@ namespace CMLauncher
                 }
                 fs.Close();
             }
+        }
+
+        private void Cancelar_Click(object sender, EventArgs e)
+        {
+            jugarMC.Enabled = true;
+            jugarMC.Text = "Descargar";
+            cancelar.Enabled = false;
+            descargando.CancelAsync();
         }
     }
 }

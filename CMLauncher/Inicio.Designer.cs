@@ -33,7 +33,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.descargaBar = new System.Windows.Forms.ProgressBar();
             this.acercaDe = new System.Windows.Forms.Button();
             this.abrirCarpeta = new System.Windows.Forms.Button();
             this.editarConfiguracionBtn = new System.Windows.Forms.Button();
@@ -41,12 +40,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.versionesCbx = new System.Windows.Forms.ComboBox();
+            this.descargaBar = new System.Windows.Forms.ProgressBar();
             this.close = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.arrastrar = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.cargaDeJson = new System.ComponentModel.BackgroundWorker();
             this.descargando = new System.ComponentModel.BackgroundWorker();
+            this.cancelar = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -113,13 +114,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Configuracion";
             this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
-            // 
-            // descargaBar
-            // 
-            this.descargaBar.Location = new System.Drawing.Point(10, 561);
-            this.descargaBar.Name = "descargaBar";
-            this.descargaBar.Size = new System.Drawing.Size(1017, 29);
-            this.descargaBar.TabIndex = 8;
             // 
             // acercaDe
             // 
@@ -216,6 +210,13 @@
             this.versionesCbx.SelectedIndexChanged += new System.EventHandler(this.versionesCbx_SelectedIndexChanged);
             this.versionesCbx.SelectedValueChanged += new System.EventHandler(this.versionesCbx_SelectedValueChanged);
             // 
+            // descargaBar
+            // 
+            this.descargaBar.Location = new System.Drawing.Point(10, 561);
+            this.descargaBar.Name = "descargaBar";
+            this.descargaBar.Size = new System.Drawing.Size(811, 29);
+            this.descargaBar.TabIndex = 8;
+            // 
             // close
             // 
             this.close.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
@@ -277,12 +278,29 @@
             // 
             this.descargando.DoWork += new System.ComponentModel.DoWorkEventHandler(this.descargando_DoWork);
             // 
+            // cancelar
+            // 
+            this.cancelar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(133)))), ((int)(((byte)(38)))));
+            this.cancelar.Enabled = false;
+            this.cancelar.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowText;
+            this.cancelar.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.cancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
+            this.cancelar.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.cancelar.Location = new System.Drawing.Point(827, 561);
+            this.cancelar.Name = "cancelar";
+            this.cancelar.Size = new System.Drawing.Size(200, 29);
+            this.cancelar.TabIndex = 8;
+            this.cancelar.Text = "Cancelar Descarga";
+            this.cancelar.UseVisualStyleBackColor = false;
+            this.cancelar.Click += new System.EventHandler(this.Cancelar_Click);
+            // 
             // Inicio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
             this.ClientSize = new System.Drawing.Size(1039, 598);
+            this.Controls.Add(this.cancelar);
             this.Controls.Add(this.descargaBar);
             this.Controls.Add(this.arrastrar);
             this.Controls.Add(this.button1);
@@ -330,6 +348,7 @@
         private System.ComponentModel.BackgroundWorker cargaDeJson;
         private System.ComponentModel.BackgroundWorker descargando;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
+        private System.Windows.Forms.Button cancelar;
     }
 }
 
