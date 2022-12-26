@@ -277,6 +277,7 @@
             // descargando
             // 
             this.descargando.DoWork += new System.ComponentModel.DoWorkEventHandler(this.descargando_DoWork);
+            this.descargando.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.descargando_RunWorkerCompleted);
             // 
             // cancelar
             // 

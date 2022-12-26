@@ -40,6 +40,8 @@ namespace CMLauncher
         int libreriasDescargadas = 0;
         int assetsTotal = 0;
         int assetsDescargados = 0;
+        int clienteDescargado = 0;
+        int clienteTotal = 0;
         public Inicio()
         {
             InitializeComponent();
@@ -245,64 +247,65 @@ namespace CMLauncher
             //var archivo = version.downloads.client.file.url;
             if(jugarMC.Text == "Jugar")
             {
-                Settings Settings = new Settings();
-                Settings.userName = userName.Text;
-                Settings.Save();
-                string uri = ((versiones)versionesCbx.SelectedValue).url;
-                var version = ((versiones)versionesCbx.SelectedValue).id;
-                //var version = Directorios[i].Split('\\')[7];
-                //var directorioVersion = Directorios[i] + "\\";
-                var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
-                versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
-                var comando = Minecraft.ejecutar(new Minecraft.argumentos
-                {
-                    minecraftPath = Settings.minecraftPath,
-                    javapath = Settings.javaPath,
-                    verWindows = "10.0",
-                    LauncherBrand = "CMLauncher",
-                    LauncherVersion = "0.0.1",
-                    Xmx = Settings.ramMB,
-                    Xmn = Settings.ramMB - (Settings.ramMB / 2),
-                    Librerias = versionDArgs.libraries,
-                    UserName = userName.Text,
-                    version = version,
-                    tipoVersion = versionDArgs.type,
-                    assetIndex = versionDArgs.assetIndex.id,
-                    uuid = Settings.UUID,
-                    gameJar = Settings.minecraftPath + "versions\\" + version + "\\" + version + ".jar"
-                });
-                FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
-                StreamReader streamReader = new StreamReader(configuracion);
-                var _configuracion = streamReader.ReadToEnd();
-                if (Settings.fullScreen == true && _configuracion.Contains("fullscreen:false"))
-                {
-                    _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
-                }
-                if(Settings.fullScreen == false && _configuracion.Contains("fullscreen:true"))
-                {
-                    _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
-                }
-                StreamWriter guardar = new StreamWriter(configuracion);
-                guardar.Write(_configuracion);
-                guardar.Close();
-                configuracion.Close();
-                streamReader.Close();
-                /*Minecraft.ExecuteCommand(comando + "\n pause");*/
+                JugarMC();
+                //Settings Settings = new Settings();
+                //Settings.userName = userName.Text;
+                //Settings.Save();
+                //string uri = ((versiones)versionesCbx.SelectedValue).url;
+                //var version = ((versiones)versionesCbx.SelectedValue).id;
+                ////var version = Directorios[i].Split('\\')[7];
+                ////var directorioVersion = Directorios[i] + "\\";
+                //var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
+                //versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
+                //var comando = Minecraft.ejecutar(new Minecraft.argumentos
+                //{
+                //    minecraftPath = Settings.minecraftPath,
+                //    javapath = Settings.javaPath,
+                //    verWindows = "10.0",
+                //    LauncherBrand = "CMLauncher",
+                //    LauncherVersion = "0.0.1",
+                //    Xmx = Settings.ramMB,
+                //    Xmn = Settings.ramMB - (Settings.ramMB / 2),
+                //    Librerias = versionDArgs.libraries,
+                //    UserName = userName.Text,
+                //    version = version,
+                //    tipoVersion = versionDArgs.type,
+                //    assetIndex = versionDArgs.assetIndex.id,
+                //    uuid = Settings.UUID,
+                //    gameJar = Settings.minecraftPath + "versions\\" + version + "\\" + version + ".jar"
+                //});
+                //FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
+                //StreamReader streamReader = new StreamReader(configuracion);
+                //var _configuracion = streamReader.ReadToEnd();
+                //if (Settings.fullScreen == true && _configuracion.Contains("fullscreen:false"))
+                //{
+                //    _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
+                //}
+                //if(Settings.fullScreen == false && _configuracion.Contains("fullscreen:true"))
+                //{
+                //    _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
+                //}
+                //StreamWriter guardar = new StreamWriter(configuracion);
+                //guardar.Write(_configuracion);
+                //guardar.Close();
+                //configuracion.Close();
+                //streamReader.Close();
+                ///*Minecraft.ExecuteCommand(comando + "\n pause");*/
 
 
-                Process process = new Process();
-                process.EnableRaisingEvents = false;
-                process.StartInfo.FileName = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\runtime\\java-runtime-beta\\windows\\java-runtime-beta\\bin\\javaw.exe";
-                //process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
-                process.StartInfo.Arguments = comando;
-                process.Start();
-                this.Hide();
-                process.WaitForExit();
-                this.Show();
-                //var cmdLine = Settings.javaPath + "\\bin\\javaw.exe " + comando;
-                //Console.WriteLine(cmdLine);
-                //versionDArgs.assets
-                //Minecraft.ejecutar();
+                //Process process = new Process();
+                //process.EnableRaisingEvents = false;
+                //process.StartInfo.FileName = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\runtime\\java-runtime-beta\\windows\\java-runtime-beta\\bin\\javaw.exe";
+                ////process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
+                //process.StartInfo.Arguments = comando;
+                //process.Start();
+                //this.Hide();
+                //process.WaitForExit();
+                //this.Show();
+                ////var cmdLine = Settings.javaPath + "\\bin\\javaw.exe " + comando;
+                ////Console.WriteLine(cmdLine);
+                ////versionDArgs.assets
+                ////Minecraft.ejecutar();
             }
             else
             {
@@ -429,6 +432,7 @@ namespace CMLauncher
         bool cambiar = true;
         int cantidad;
         int paso;
+        int i = 0;
         private void descargando_DoWork(object sender, DoWorkEventArgs e)
         {
             descargando.WorkerReportsProgress = true;
@@ -444,11 +448,10 @@ namespace CMLauncher
             _descargarVersion = JsonConvert.DeserializeObject<descargarVersion>(json);
             var minecraftPath = Settings.minecraftPath;
             var assets = descargar.ObtenerIndexAsset(url, _descargarVersion, minecraftPath);
-            cantidad = assets.Count();
+            cantidad = assets.Count() + _descargarVersion.libraries.Count() + 6;
             
             
-            var i = 0;
-            cantidad = assets.Count();
+            i = 0;
             cambiar = false;
             var cliente = _descargarVersion.downloads.client;
             var librerias = _descargarVersion.libraries.Select(a=>a.downloads.artifact.url).ToList();
@@ -513,7 +516,6 @@ namespace CMLauncher
                     if (!library.url.Contains("linux") || !library.url.Contains("macos"))
                     {
                         descargarLib(library.url, library.path);
-
                         MBCurso += Math.Round((library.size / 1024) / 1024, 2);
                         paso = 3;
                         descargando.ReportProgress(i);
@@ -524,33 +526,39 @@ namespace CMLauncher
                     {
 
                     }
-
                 }
             }
-            
+            paso = 5;
         descargarClient:
             if (!Directory.Exists(Settings.minecraftPath + "versions\\" + versionID))
             {
                 Directory.CreateDirectory(Settings.minecraftPath + "versions\\" + versionID);
+
                 goto descargarClient;
             }
             else
             {
-                descargarArchivo(cliente.url, Settings.minecraftPath + "versions\\" + versionID + "\\", versionID + ".jar");
-                File.WriteAllText(Settings.minecraftPath + "versions\\" + versionID + "\\"+ versionID + ".json", json);
+                if (!Directory.Exists(Settings.minecraftPath + "versions\\" + versionID + "\\natives"))
+                {
+                    Directory.CreateDirectory(Settings.minecraftPath + "versions\\" + versionID + "\\natives");
+                }
+                if (!File.Exists(Settings.minecraftPath + "versions\\" + versionID + "\\" + versionID + ".jar"))
+                {
+                    descargarCliente(cliente.url, Settings.minecraftPath + "versions\\" + versionID + "\\", versionID + ".jar");
+                    File.WriteAllText(Settings.minecraftPath + "versions\\" + versionID + "\\" + versionID + ".json", json);
+                }
+                else
+                {
+                    if (!File.Exists(Settings.minecraftPath + "versions\\" + versionID + "\\" + versionID + ".json"))
+                    {
+                        File.WriteAllText(Settings.minecraftPath + "versions\\" + versionID + "\\" + versionID + ".json", json);
+                    }
+                }
                 i++;
-                descargando.ReportProgress(i);
+                
+                
             }
-            temp = VerificarInstalados(temp, obtenerVersionesInstaladas());
-            if (temp != null)
-            {
-                versionesCbx.DataSource = temp.versions;
-                var selecionado = versionesCbx.SelectedIndex;
-                versionesCbx.SelectedIndex = selecionado + 1;
-                versionesCbx.SelectedIndex = selecionado;
-                versionesCbx.DisplayMember = "id";
-            }
-            paso = 4;
+            paso = 7;
             descargando.ReportProgress(i);
         }
 
@@ -558,10 +566,7 @@ namespace CMLauncher
         {
             Settings settings = new Settings();
             byte[] fileData;
-            using (WebClient client = new WebClient())
-            {
-                fileData = client.DownloadData(url);
-            }
+            
             var pathDividido = path.Split('/');
             var archivo = pathDividido[pathDividido.Length - 1];
             var pathTemporal = "";
@@ -590,13 +595,20 @@ namespace CMLauncher
                 }
             }
             var pasarArchivo = settings.minecraftPath + "libraries\\" + pathTemporal + archivo;
-            using (FileStream fs = new FileStream(pasarArchivo, FileMode.Create))
+            if (!File.Exists(pasarArchivo))
             {
-                foreach (byte b in fileData)
+                using (WebClient client = new WebClient())
                 {
-                    fs.WriteByte(b);
+                    fileData = client.DownloadData(url);
                 }
-                fs.Close();
+                using (FileStream fs = new FileStream(pasarArchivo, FileMode.Create))
+                {
+                    foreach (byte b in fileData)
+                    {
+                        fs.WriteByte(b);
+                    }
+                    fs.Close();
+                }
             }
         }
 
@@ -610,7 +622,8 @@ namespace CMLauncher
             }
             else
             {
-                descargaBar.Value += 1;
+                if(!(i > descargaBar.Maximum))
+                    descargaBar.Value += 1;
             };
             int newSize = 10;
             switch (paso)
@@ -620,7 +633,6 @@ namespace CMLauncher
                     jugarMC.Text = "Iniciando...";
                     break;
                 case 2:
-                    
                     jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
                     jugarMC.ForeColor = Color.White;
                     jugarMC.BackColor = Color.FromArgb(200, 255, 210);
@@ -640,12 +652,92 @@ namespace CMLauncher
                     //jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + "/ " + MBTotal + "MB";
                     break;
                 case 5:
+                    jugarMC.Text = "Descargando cliente...";
+                    descargaBar.Style = ProgressBarStyle.Marquee;
                     break;
                 case 6:
+                    
                     break;
                 case 7:
+                    temp = VerificarInstalados(temp, obtenerVersionesInstaladas());
+                    if (temp != null)
+                    {
+                        jugarMC.Font = new Font(jugarMC.Font.FontFamily, 14.25f, FontStyle.Bold);
+                        jugarMC.ForeColor = Color.White;
+                        //59; 133; 38
+                        jugarMC.BackColor = Color.FromArgb(59, 133, 38);
+                        jugarMC.Text = "Jugar";
+                        jugarMC.Enabled = true;
+                        versionesCbx.DataSource = temp.versions;
+                        var selecionado = versionesCbx.SelectedIndex;
+                        versionesCbx.SelectedIndex = selecionado + 1;
+                        versionesCbx.SelectedIndex = selecionado;
+                        versionesCbx.DisplayMember = "id";
+                    }
                     break;
             }
+        }
+        
+        public void JugarMC()
+        {
+            Settings Settings = new Settings();
+            Settings.userName = userName.Text;
+            Settings.Save();
+            string uri = ((versiones)versionesCbx.SelectedValue).url;
+            var version = ((versiones)versionesCbx.SelectedValue).id;
+            //var version = Directorios[i].Split('\\')[7];
+            //var directorioVersion = Directorios[i] + "\\";
+            var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
+            versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
+            var comando = Minecraft.ejecutar(new Minecraft.argumentos
+            {
+                minecraftPath = Settings.minecraftPath,
+                javapath = Settings.javaPath,
+                verWindows = "10.0",
+                LauncherBrand = "CMLauncher",
+                LauncherVersion = "0.0.1",
+                Xmx = Settings.ramMB,
+                Xmn = Settings.ramMB - (Settings.ramMB / 2),
+                Librerias = versionDArgs.libraries,
+                UserName = userName.Text,
+                version = version,
+                tipoVersion = versionDArgs.type,
+                assetIndex = versionDArgs.assetIndex.id,
+                uuid = Settings.UUID,
+                gameJar = Settings.minecraftPath + "versions\\" + version + "\\" + version + ".jar"
+            });
+            FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
+            StreamReader streamReader = new StreamReader(configuracion);
+            var _configuracion = streamReader.ReadToEnd();
+            if (Settings.fullScreen == true && _configuracion.Contains("fullscreen:false"))
+            {
+                _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
+            }
+            if (Settings.fullScreen == false && _configuracion.Contains("fullscreen:true"))
+            {
+                _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
+            }
+            StreamWriter guardar = new StreamWriter(configuracion);
+            guardar.Write(_configuracion);
+            guardar.Close();
+            configuracion.Close();
+            streamReader.Close();
+            /*Minecraft.ExecuteCommand(comando + "\n pause");*/
+
+
+            Process process = new Process();
+            process.EnableRaisingEvents = false;
+            process.StartInfo.FileName = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\runtime\\java-runtime-beta\\windows\\java-runtime-beta\\bin\\javaw.exe";
+            //process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
+            process.StartInfo.Arguments = comando;
+            process.Start();
+            this.Hide();
+            process.WaitForExit();
+            this.Show();
+            //var cmdLine = Settings.javaPath + "\\bin\\javaw.exe " + comando;
+            //Console.WriteLine(cmdLine);
+            //versionDArgs.assets
+            //Minecraft.ejecutar();
         }
 
         public void descargarArchivo(string url, string path, string fileName)
@@ -665,12 +757,43 @@ namespace CMLauncher
             }
         }
 
+        public void descargarCliente(string url, string path, string fileName)
+        {
+            byte[] fileData;
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadProgressChanged += Client_DownloadProgressChanged1;
+                fileData = client.DownloadData(url);
+                
+            }
+            using (FileStream fs = new FileStream(path + fileName, FileMode.Create))
+            {
+                foreach (byte b in fileData)
+                {
+                    fs.WriteByte(b);
+                    i++;
+                }
+                fs.Close();
+            }
+        }
+
+        private void Client_DownloadProgressChanged1(object sender, DownloadProgressChangedEventArgs e)
+        {
+            descargando.ReportProgress(i);
+        }
+
         private void Cancelar_Click(object sender, EventArgs e)
         {
             jugarMC.Enabled = true;
             jugarMC.Text = "Descargar";
             cancelar.Enabled = false;
             descargando.CancelAsync();
+        }
+
+        private void descargando_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            descargaBar.Value = 0;
+            descargaBar.Style = ProgressBarStyle.Blocks;
         }
     }
 }

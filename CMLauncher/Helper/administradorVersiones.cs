@@ -29,14 +29,19 @@ namespace CMLauncher.Helper
             {
                 var version = Directorios[i].Split('\\')[7];
                 var directorioVersion = Directorios[i] + "\\";
-                var json = System.IO.File.ReadAllText(string.Format("{0}{1}.json", directorioVersion, version));
-                versionCarpetas.Add(new versionCarpeta
+                var carpeta = Path.Combine(Settings.minecraftPath, "versions", directorioVersion);
+                var DirectoriosRevisar = Directory.GetFiles(carpeta);
+                if(DirectoriosRevisar.Length > 1)
                 {
-                    version = version,
-                    carpeta = Directorios[i],
-                    json = JsonConvert.DeserializeObject<descargarVersion>(json)
+                    var json = System.IO.File.ReadAllText(string.Format("{0}{1}.json", directorioVersion, version));
+                        versionCarpetas.Add(new versionCarpeta
+                        {
+                            version = version,
+                            carpeta = Directorios[i],
+                            json = JsonConvert.DeserializeObject<descargarVersion>(json)
+                        }
+                    );
                 }
-            );
             }
             return versionCarpetas;
         }
