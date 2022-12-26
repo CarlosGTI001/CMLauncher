@@ -32,6 +32,9 @@ namespace CMLauncher
         public descargas temp { get; set; }
         public descargarVersion versionDArgs;
         string versionUrl = "";
+
+        float MBTotal;
+        float MBCurso;
         public Inicio()
         {
             InitializeComponent();
@@ -57,6 +60,7 @@ namespace CMLauncher
                 }
                 userName.Text = Settings.userName;
             GC.Collect();
+            descargando.ProgressChanged += Descargando_ProgressChanged;
         }
 
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -400,12 +404,17 @@ namespace CMLauncher
             info.ShowDialog();
         }
 
-        public string obtenerID()
+        public void counter()
         {
-            var url = ((versiones)(versionesCbx.SelectedValue)).url;
-            return url;
+            if (cambiar)
+            {
+                descargaBar.Maximum = cantidad;
+                descargaBar.Minimum = 0;
+                descargaBar.Style = ProgressBarStyle.Blocks;
+            }
         }
-
+        bool cambiar = true;
+        int cantidad;
         private void descargando_DoWork(object sender, DoWorkEventArgs e)
         {
             Descargar descargar = new Descargar();
@@ -417,11 +426,12 @@ namespace CMLauncher
             descargarVersion = JsonConvert.DeserializeObject<descargarVersion>(json);
             var minecraftPath = Settings.minecraftPath;
             var assets = descargar.ObtenerIndexAsset(url, descargarVersion, minecraftPath);
-            var cantidad = assets.Count();
+            cantidad = assets.Count();
             descargando.WorkerReportsProgress = true;
             descargando.ReportProgress(0);
             var i = 0;
-            descargando.ProgressChanged += Descargando_ProgressChanged;
+            cantidad = assets.Count();
+            cambiar = false;
             foreach (var asset in assets)
             {
                 var firstPath = asset.hash.Substring(0, 2);
@@ -445,23 +455,23 @@ namespace CMLauncher
                 }
                 
                 
-                descargando.ReportProgress((i*100)/assets.Count());
+                descargando.ReportProgress(i);
                 i++;
             }
         }
 
         private void Descargando_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if(e.ProgressPercentage == 0)
+            
+            if (!cambiar)
             {
-                descargaBar.Maximum = 100;
-                descargaBar.Value = 0;
+                cambiar = true;
+                counter();
             }
-            descargaBar.Style = ProgressBarStyle.Continuous;
-            if (e.ProgressPercentage > 0)
+            else
             {
-                descargaBar.Value = e.ProgressPercentage;
-            }
+                descargaBar.Value += 1;
+            };
         }
 
         public void descargarArchivo(string url, string path, string fileName)

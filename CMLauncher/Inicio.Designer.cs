@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Inicio));
             this.jugarMC = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.descargaBar = new System.Windows.Forms.ProgressBar();
             this.acercaDe = new System.Windows.Forms.Button();
@@ -46,11 +47,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cargaDeJson = new System.ComponentModel.BackgroundWorker();
             this.descargando = new System.ComponentModel.BackgroundWorker();
-            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.arrastrar.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
             this.SuspendLayout();
             // 
             // jugarMC
@@ -75,15 +75,27 @@
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox1.Location = new System.Drawing.Point(10, 47);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(811, 542);
+            this.groupBox1.Size = new System.Drawing.Size(811, 508);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Novedades";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
+            // webView21
+            // 
+            this.webView21.AllowExternalDrop = true;
+            this.webView21.CreationProperties = null;
+            this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webView21.Location = new System.Drawing.Point(3, 30);
+            this.webView21.Name = "webView21";
+            this.webView21.Size = new System.Drawing.Size(805, 475);
+            this.webView21.Source = new System.Uri("https://www.minecraft.net/", System.UriKind.Absolute);
+            this.webView21.TabIndex = 0;
+            this.webView21.ZoomFactor = 1D;
+            // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.descargaBar);
             this.groupBox2.Controls.Add(this.acercaDe);
             this.groupBox2.Controls.Add(this.abrirCarpeta);
             this.groupBox2.Controls.Add(this.editarConfiguracionBtn);
@@ -96,7 +108,7 @@
             this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox2.Location = new System.Drawing.Point(827, 46);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 542);
+            this.groupBox2.Size = new System.Drawing.Size(200, 509);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Configuracion";
@@ -104,9 +116,9 @@
             // 
             // descargaBar
             // 
-            this.descargaBar.Location = new System.Drawing.Point(0, 510);
+            this.descargaBar.Location = new System.Drawing.Point(10, 561);
             this.descargaBar.Name = "descargaBar";
-            this.descargaBar.Size = new System.Drawing.Size(200, 29);
+            this.descargaBar.Size = new System.Drawing.Size(1017, 29);
             this.descargaBar.TabIndex = 8;
             // 
             // acercaDe
@@ -265,25 +277,13 @@
             // 
             this.descargando.DoWork += new System.ComponentModel.DoWorkEventHandler(this.descargando_DoWork);
             // 
-            // webView21
-            // 
-            this.webView21.AllowExternalDrop = true;
-            this.webView21.CreationProperties = null;
-            this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webView21.Location = new System.Drawing.Point(3, 30);
-            this.webView21.Name = "webView21";
-            this.webView21.Size = new System.Drawing.Size(805, 509);
-            this.webView21.Source = new System.Uri("https://www.minecraft.net/", System.UriKind.Absolute);
-            this.webView21.TabIndex = 0;
-            this.webView21.ZoomFactor = 1D;
-            // 
             // Inicio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
             this.ClientSize = new System.Drawing.Size(1039, 598);
+            this.Controls.Add(this.descargaBar);
             this.Controls.Add(this.arrastrar);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.close);
@@ -301,11 +301,11 @@
             this.Load += new System.EventHandler(this.Inicio_Load);
             this.Shown += new System.EventHandler(this.Inicio_Shown);
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.arrastrar.ResumeLayout(false);
             this.arrastrar.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
             this.ResumeLayout(false);
 
         }
