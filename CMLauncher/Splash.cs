@@ -37,7 +37,7 @@ namespace CMLauncher
                 
             }
             settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
-
+            
             if (string.IsNullOrEmpty(settings.minecraftPath) || settings.minecraftPath == "null")
             {
                 
@@ -228,6 +228,7 @@ namespace CMLauncher
         private void segundoPlano_DoWork(object sender, DoWorkEventArgs e)
         {
             Versiones = CargaAV();
+            GC.Collect();
         }
 
         private void segundoPlano_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -249,7 +250,8 @@ namespace CMLauncher
 
             //    }
             //}
-            inicio.temp = CargaAV();
+            inicio.temp = Versiones;
+            GC.Collect();
             inicio.Show();
             this.Hide();
         }

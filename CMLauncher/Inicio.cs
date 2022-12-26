@@ -31,7 +31,7 @@ namespace CMLauncher
         public bool Arrastre { get; private set; }
         public descargas temp { get; set; }
         public descargarVersion versionDArgs;
-        
+        string versionUrl = "";
         public Inicio()
         {
             InitializeComponent();
@@ -48,7 +48,6 @@ namespace CMLauncher
             Form form1 = this;
             Settings Settings = new Settings();
             //cargar url en el webview novedades
-            this.Invoke(new MethodInvoker(()=> novedades.Source = new Uri("https://www.minecraft.net/es-es")));
             if (temp != null)
                 {
                     versionesCbx.DataSource = temp.versions;
@@ -57,6 +56,12 @@ namespace CMLauncher
                     versionesCbx.DisplayMember = "id";
                 }
                 userName.Text = Settings.userName;
+            GC.Collect();
+        }
+
+        private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            
         }
 
         //public void cargar()
@@ -292,7 +297,8 @@ namespace CMLauncher
             }
             else
             {
-                MessageBox.Show("Debes descargar la version");
+                descargaBar.Style = ProgressBarStyle.Marquee;
+                descargando.RunWorkerAsync();
             }
         }
 
@@ -325,15 +331,15 @@ namespace CMLauncher
         {
             if(versionesCbx.SelectedIndex != -1)
             {
-                var versionSeleccionada = ((versiones)versionesCbx.SelectedValue).id;
-                var versionDesplegadas = temp.versions.Where(a => a.id == versionSeleccionada).FirstOrDefault();
-                if (versionDesplegadas.descargado)
+                var versionSeleccionada = ((versiones)versionesCbx.SelectedValue).descargado;
+                if (versionSeleccionada)
                 {
                     jugarMC.Text = "Jugar";
                 }
                 else {
                     jugarMC.Text = "Descargar";
                 }
+                versionUrl = ((versiones)versionesCbx.SelectedValue).url;
             }
         }
 
@@ -392,6 +398,87 @@ namespace CMLauncher
         {
             info info = new info();
             info.ShowDialog();
+        }
+
+        public string obtenerID()
+        {
+            var url = ((versiones)(versionesCbx.SelectedValue)).url;
+            return url;
+        }
+
+        private void descargando_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Descargar descargar = new Descargar();
+            descargarVersion descargarVersion = new descargarVersion();
+            Settings Settings = new Settings();
+            var url = versionUrl;
+            WebClient webClient = new WebClient();
+            var json = webClient.DownloadString(url);
+            descargarVersion = JsonConvert.DeserializeObject<descargarVersion>(json);
+            var minecraftPath = Settings.minecraftPath;
+            var assets = descargar.ObtenerIndexAsset(url, descargarVersion, minecraftPath);
+            var cantidad = assets.Count();
+            descargando.WorkerReportsProgress = true;
+            descargando.ReportProgress(0);
+            var i = 0;
+            descargando.ProgressChanged += Descargando_ProgressChanged;
+            foreach (var asset in assets)
+            {
+                var firstPath = asset.hash.Substring(0, 2);
+                var fileName = asset.hash;
+                var urlInicial = "https://resources.download.minecraft.net";
+                var urlDescarga = urlInicial + "/" +firstPath + "/" + fileName;
+                var path = Settings.minecraftPath + "assets\\objects\\" + firstPath + "" +
+                    "\\";
+                crearPath:
+                if (Directory.Exists(path))
+                {
+                    if (!File.Exists(path+fileName))
+                    {
+                        descargarArchivo(urlDescarga, path, fileName);
+                    }
+                }
+                else
+                {
+                    Directory.CreateDirectory(path);
+                    goto crearPath;
+                }
+                
+                
+                descargando.ReportProgress((i*100)/assets.Count());
+                i++;
+            }
+        }
+
+        private void Descargando_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if(e.ProgressPercentage == 0)
+            {
+                descargaBar.Maximum = 100;
+                descargaBar.Value = 0;
+            }
+            descargaBar.Style = ProgressBarStyle.Continuous;
+            if (e.ProgressPercentage > 0)
+            {
+                descargaBar.Value = e.ProgressPercentage;
+            }
+        }
+
+        public void descargarArchivo(string url, string path, string fileName)
+        {
+            byte[] fileData;
+            using (WebClient client = new WebClient())
+            {
+                fileData = client.DownloadData(url);
+            }
+            using (FileStream fs = new FileStream(path+fileName, FileMode.Create))
+            {
+                foreach(byte b in fileData)
+                {
+                    fs.WriteByte(b);
+                }
+                fs.Close();
+            }
         }
     }
 }

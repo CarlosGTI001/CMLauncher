@@ -31,9 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Inicio));
             this.jugarMC = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.novedades = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.descargaBar = new System.Windows.Forms.ProgressBar();
             this.acercaDe = new System.Windows.Forms.Button();
             this.abrirCarpeta = new System.Windows.Forms.Button();
             this.editarConfiguracionBtn = new System.Windows.Forms.Button();
@@ -45,10 +44,13 @@
             this.button1 = new System.Windows.Forms.Button();
             this.arrastrar = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
+            this.cargaDeJson = new System.ComponentModel.BackgroundWorker();
+            this.descargando = new System.ComponentModel.BackgroundWorker();
+            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.novedades)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.arrastrar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
             this.SuspendLayout();
             // 
             // jugarMC
@@ -68,7 +70,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.novedades);
+            this.groupBox1.Controls.Add(this.webView21);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 17.25F);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox1.Location = new System.Drawing.Point(10, 47);
@@ -79,22 +81,9 @@
             this.groupBox1.Text = "Novedades";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
-            // novedades
-            // 
-            this.novedades.AllowExternalDrop = true;
-            this.novedades.CreationProperties = null;
-            this.novedades.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.novedades.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.novedades.Location = new System.Drawing.Point(3, 30);
-            this.novedades.Name = "novedades";
-            this.novedades.Size = new System.Drawing.Size(805, 509);
-            this.novedades.Source = new System.Uri("https://www.minecraft.net/es-es", System.UriKind.Absolute);
-            this.novedades.TabIndex = 0;
-            this.novedades.ZoomFactor = 1D;
-            // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.progressBar1);
+            this.groupBox2.Controls.Add(this.descargaBar);
             this.groupBox2.Controls.Add(this.acercaDe);
             this.groupBox2.Controls.Add(this.abrirCarpeta);
             this.groupBox2.Controls.Add(this.editarConfiguracionBtn);
@@ -113,12 +102,12 @@
             this.groupBox2.Text = "Configuracion";
             this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
-            // progressBar1
+            // descargaBar
             // 
-            this.progressBar1.Location = new System.Drawing.Point(0, 510);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(200, 29);
-            this.progressBar1.TabIndex = 8;
+            this.descargaBar.Location = new System.Drawing.Point(0, 510);
+            this.descargaBar.Name = "descargaBar";
+            this.descargaBar.Size = new System.Drawing.Size(200, 29);
+            this.descargaBar.TabIndex = 8;
             // 
             // acercaDe
             // 
@@ -272,6 +261,23 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "CMLauncher";
             // 
+            // descargando
+            // 
+            this.descargando.DoWork += new System.ComponentModel.DoWorkEventHandler(this.descargando_DoWork);
+            // 
+            // webView21
+            // 
+            this.webView21.AllowExternalDrop = true;
+            this.webView21.CreationProperties = null;
+            this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webView21.Location = new System.Drawing.Point(3, 30);
+            this.webView21.Name = "webView21";
+            this.webView21.Size = new System.Drawing.Size(805, 509);
+            this.webView21.Source = new System.Uri("https://www.minecraft.net/", System.UriKind.Absolute);
+            this.webView21.TabIndex = 0;
+            this.webView21.ZoomFactor = 1D;
+            // 
             // Inicio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -295,11 +301,11 @@
             this.Load += new System.EventHandler(this.Inicio_Load);
             this.Shown += new System.EventHandler(this.Inicio_Shown);
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.novedades)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.arrastrar.ResumeLayout(false);
             this.arrastrar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -313,7 +319,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox userName;
-        private Microsoft.Web.WebView2.WinForms.WebView2 novedades;
         private System.Windows.Forms.Button close;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel arrastrar;
@@ -321,7 +326,10 @@
         private System.Windows.Forms.Button editarConfiguracionBtn;
         private System.Windows.Forms.Button abrirCarpeta;
         private System.Windows.Forms.Button acercaDe;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ProgressBar descargaBar;
+        private System.ComponentModel.BackgroundWorker cargaDeJson;
+        private System.ComponentModel.BackgroundWorker descargando;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
     }
 }
 
