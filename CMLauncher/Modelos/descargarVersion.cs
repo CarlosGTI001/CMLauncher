@@ -36,7 +36,7 @@ namespace CMLauncher.Modelos
     {
         public string path { get; set; }
         public string sha1 { get; set; }
-        public int size { get; set; }
+        public double size { get; set; }
         public string url { get; set; }
     }
 

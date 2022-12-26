@@ -21,6 +21,7 @@ using CMLauncher.Helper;
 using static CMLauncher.Helper.Minecraft;
 using System.Diagnostics;
 using static CMLauncher.Helper.administradorVersiones;
+using System.Windows.Shapes;
 
 namespace CMLauncher
 {
@@ -425,8 +426,9 @@ namespace CMLauncher
         int cantidad;
         private void descargando_DoWork(object sender, DoWorkEventArgs e)
         {
+
             jugarMC.Enabled = false;
-            jugarMC.Text = "Inicio...";
+            jugarMC.Text = "Iniciando...";
             Descargar descargar = new Descargar();
             descargarVersion _descargarVersion = new descargarVersion();
             Settings Settings = new Settings();
@@ -445,14 +447,31 @@ namespace CMLauncher
             cambiar = false;
             var cliente = _descargarVersion.downloads.client;
             var librerias = _descargarVersion.libraries.Where(a=>a.downloads.artifact.path.Contains("windows")).Select(a=>a.downloads.artifact.url).ToList();
+            var Libreria = _descargarVersion.libraries.Select(a=>a.downloads.artifact).Where(a => a.path.Contains("windows")).ToList<Artifact>();
             var pesoLibrerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.size).ToList();
             MBTotal = (assets.Select(a=>a.size).Sum() / 1024)/1024;
-            MessageBox.Show("Assets " + (assets.Select(a => a.size).Sum() / 1024) / 1024 + "MB");
             MBTotal += (cliente.size / 1024)/ 1024;
-            MessageBox.Show("Jar " + (cliente.size / 1024) / 1024 + "MB");
             MBTotal += (pesoLibrerias.Sum() / 1024)/ 1024;
-            MessageBox.Show("Librerias " + ((pesoLibrerias.Sum() / 1024) / 1024) + "MB");
+            
             MBTotal = Math.Round(MBTotal, 2);
+
+            int newSize = 10;
+            jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
+            jugarMC.ForeColor = Color.White;
+            jugarMC.BackColor = Color.FromArgb(200, 255, 210);
+            jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + "/ " + MBTotal + "MB";
+            if (Directory.Exists(Settings.minecraftPath + "libraries"))
+            {
+                foreach (Artifact library in Libreria)
+                {
+                    descargarLib(library.url, library.path);
+
+                    MBCurso += Math.Round((library.size / 1024) / 1024, 2);
+                    jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + "/ " + MBTotal + "MB";
+                    descargando.ReportProgress(i);
+                    i++;
+                }
+            }
             foreach (var asset in assets)
             {
                 var firstPath = asset.hash.Substring(0, 2);
@@ -462,11 +481,8 @@ namespace CMLauncher
                 var path = Settings.minecraftPath + "assets\\objects\\" + firstPath + "" +
                     "\\";
                 MBCurso += Math.Round((((asset.size)/1024)/1024), 2);
-                int newSize = 10;
-                jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize);
-                jugarMC.ForeColor = Color.White;
                 
-                jugarMC.Text = "" + MBCurso + "MB" + "/ " + MBTotal + "MB";
+                jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + "/ " + MBTotal + "MB";
                 crearPath:
                 if (Directory.Exists(path))
                 {
@@ -483,11 +499,7 @@ namespace CMLauncher
                 descargando.ReportProgress(i);
                 i++;
             }
-            descargarLibrerias:
-            if(Directory.Exists(Settings.minecraftPath + "libraries"))
-            {
-
-            }
+            
             descargarClient:
             if (!Directory.Exists(Settings.minecraftPath + "versions\\" + versionID))
             {
@@ -497,8 +509,65 @@ namespace CMLauncher
             else
             {
                 descargarArchivo(cliente.url, Settings.minecraftPath + "versions\\" + versionID + "\\", versionID + ".jar");
+                File.WriteAllText(Settings.minecraftPath + "versions\\" + versionID + "\\"+ versionID + ".json", json);
+                i++;
+                descargando.ReportProgress(i);
             }
+            temp = VerificarInstalados(temp, obtenerVersionesInstaladas());
+            if (temp != null)
+            {
+                versionesCbx.DataSource = temp.versions;
+                var selecionado = versionesCbx.SelectedIndex;
+                versionesCbx.SelectedIndex = selecionado + 1;
+                versionesCbx.SelectedIndex = selecionado;
+                versionesCbx.DisplayMember = "id";
+            }
+        }
 
+        private void descargarLib(string url, string path)
+        {
+            Settings settings = new Settings();
+            byte[] fileData;
+            using (WebClient client = new WebClient())
+            {
+                fileData = client.DownloadData(url);
+            }
+            var pathDividido = path.Split('/');
+            var archivo = pathDividido[pathDividido.Length - 1];
+            var pathTemporal = "";
+            var i = 0;
+            foreach(string _path in pathDividido)
+            {
+                if (i < pathDividido.Length - 1)
+                {
+                    if (Directory.Exists(settings.minecraftPath + "libraries\\" + pathTemporal + _path))
+                    {
+                        pathTemporal += _path + "\\";
+                        i++;
+                        continue;
+                    }
+                    else
+                    {
+                        var carpeta = settings.minecraftPath + "libraries\\" + pathTemporal + _path;
+                        Directory.CreateDirectory(carpeta);
+                    }
+                    pathTemporal += _path + "\\";
+                    i++;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            var pasarArchivo = settings.minecraftPath + "libraries\\" + pathTemporal + archivo;
+            using (FileStream fs = new FileStream(pasarArchivo, FileMode.Create))
+            {
+                foreach (byte b in fileData)
+                {
+                    fs.WriteByte(b);
+                }
+                fs.Close();
+            }
         }
 
         private void Descargando_ProgressChanged(object sender, ProgressChangedEventArgs e)
