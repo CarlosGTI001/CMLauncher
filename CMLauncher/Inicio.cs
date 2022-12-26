@@ -32,7 +32,7 @@ namespace CMLauncher
         public descargas temp { get; set; }
         public descargarVersion versionDArgs;
         string versionUrl = "";
-
+        private string versionID;
         double MBTotal;
         double MBCurso;
         public Inicio()
@@ -345,6 +345,7 @@ namespace CMLauncher
                     jugarMC.Text = "Descargar";
                 }
                 versionUrl = ((versiones)versionesCbx.SelectedValue).url;
+                versionID = ((versiones)versionesCbx.SelectedValue).id;
             }
         }
 
@@ -414,21 +415,27 @@ namespace CMLauncher
                 descargaBar.Style = ProgressBarStyle.Blocks;
             }
         }
+
+        public void iniciarDescarga()
+        {
+            
+        }
+
         bool cambiar = true;
         int cantidad;
         private void descargando_DoWork(object sender, DoWorkEventArgs e)
         {
-            Descargar descargar = new Descargar();
-            descargarVersion descargarVersion = new descargarVersion();
-            Settings Settings = new Settings();
             jugarMC.Enabled = false;
             jugarMC.Text = "Inicio...";
+            Descargar descargar = new Descargar();
+            descargarVersion _descargarVersion = new descargarVersion();
+            Settings Settings = new Settings();
             var url = versionUrl;
             WebClient webClient = new WebClient();
             var json = webClient.DownloadString(url);
-            descargarVersion = JsonConvert.DeserializeObject<descargarVersion>(json);
+            _descargarVersion = JsonConvert.DeserializeObject<descargarVersion>(json);
             var minecraftPath = Settings.minecraftPath;
-            var assets = descargar.ObtenerIndexAsset(url, descargarVersion, minecraftPath);
+            var assets = descargar.ObtenerIndexAsset(url, _descargarVersion, minecraftPath);
             cantidad = assets.Count();
             descargando.WorkerReportsProgress = true;
             descargando.WorkerSupportsCancellation = true;
@@ -436,7 +443,16 @@ namespace CMLauncher
             var i = 0;
             cantidad = assets.Count();
             cambiar = false;
+            var cliente = _descargarVersion.downloads.client;
+            var librerias = _descargarVersion.libraries.Where(a=>a.downloads.artifact.path.Contains("windows")).Select(a=>a.downloads.artifact.url).ToList();
+            var pesoLibrerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.size).ToList();
             MBTotal = (assets.Select(a=>a.size).Sum() / 1024)/1024;
+            MessageBox.Show("Assets " + (assets.Select(a => a.size).Sum() / 1024) / 1024 + "MB");
+            MBTotal += (cliente.size / 1024)/ 1024;
+            MessageBox.Show("Jar " + (cliente.size / 1024) / 1024 + "MB");
+            MBTotal += (pesoLibrerias.Sum() / 1024)/ 1024;
+            MessageBox.Show("Librerias " + ((pesoLibrerias.Sum() / 1024) / 1024) + "MB");
+            MBTotal = Math.Round(MBTotal, 2);
             foreach (var asset in assets)
             {
                 var firstPath = asset.hash.Substring(0, 2);
@@ -446,10 +462,11 @@ namespace CMLauncher
                 var path = Settings.minecraftPath + "assets\\objects\\" + firstPath + "" +
                     "\\";
                 MBCurso += Math.Round((((asset.size)/1024)/1024), 2);
-                int newSize = 12;
+                int newSize = 10;
                 jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize);
                 jugarMC.ForeColor = Color.White;
-                jugarMC.Text = "" + MBCurso + "MB";
+                
+                jugarMC.Text = "" + MBCurso + "MB" + "/ " + MBTotal + "MB";
                 crearPath:
                 if (Directory.Exists(path))
                 {
@@ -466,6 +483,22 @@ namespace CMLauncher
                 descargando.ReportProgress(i);
                 i++;
             }
+            descargarLibrerias:
+            if(Directory.Exists(Settings.minecraftPath + "libraries"))
+            {
+
+            }
+            descargarClient:
+            if (!Directory.Exists(Settings.minecraftPath + "versions\\" + versionID))
+            {
+                Directory.CreateDirectory(Settings.minecraftPath + "versions\\" + versionID);
+                goto descargarClient;
+            }
+            else
+            {
+                descargarArchivo(cliente.url, Settings.minecraftPath + "versions\\" + versionID + "\\", versionID + ".jar");
+            }
+
         }
 
         private void Descargando_ProgressChanged(object sender, ProgressChangedEventArgs e)

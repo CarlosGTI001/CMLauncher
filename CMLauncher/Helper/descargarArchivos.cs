@@ -69,7 +69,7 @@ namespace CMLauncher.Helper
 
         }
 
-        public void Version()
+        public void Version(descargarVersion descargarVersion)
         {
 
         }
