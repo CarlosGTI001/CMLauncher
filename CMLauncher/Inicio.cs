@@ -34,8 +34,12 @@ namespace CMLauncher
         public descargarVersion versionDArgs;
         string versionUrl = "";
         private string versionID;
+        private int cantidadLibrerias;
         double MBTotal;
         double MBCurso;
+        int libreriasDescargadas = 0;
+        int assetsTotal = 0;
+        int assetsDescargados = 0;
         public Inicio()
         {
             InitializeComponent();
@@ -424,11 +428,13 @@ namespace CMLauncher
 
         bool cambiar = true;
         int cantidad;
+        int paso;
         private void descargando_DoWork(object sender, DoWorkEventArgs e)
         {
-
-            jugarMC.Enabled = false;
-            jugarMC.Text = "Iniciando...";
+            descargando.WorkerReportsProgress = true;
+            descargando.WorkerSupportsCancellation = true;
+            descargando.ReportProgress(0);
+            paso = 1;
             Descargar descargar = new Descargar();
             descargarVersion _descargarVersion = new descargarVersion();
             Settings Settings = new Settings();
@@ -439,50 +445,46 @@ namespace CMLauncher
             var minecraftPath = Settings.minecraftPath;
             var assets = descargar.ObtenerIndexAsset(url, _descargarVersion, minecraftPath);
             cantidad = assets.Count();
-            descargando.WorkerReportsProgress = true;
-            descargando.WorkerSupportsCancellation = true;
-            descargando.ReportProgress(0);
+            
+            
             var i = 0;
             cantidad = assets.Count();
             cambiar = false;
             var cliente = _descargarVersion.downloads.client;
-            var librerias = _descargarVersion.libraries.Where(a=>a.downloads.artifact.path.Contains("windows")).Select(a=>a.downloads.artifact.url).ToList();
-            var Libreria = _descargarVersion.libraries.Select(a=>a.downloads.artifact).Where(a => a.path.Contains("windows")).ToList<Artifact>();
+            var librerias = _descargarVersion.libraries.Select(a=>a.downloads.artifact.url).ToList();
+            var Libreria = _descargarVersion.libraries.Select(a=>a.downloads.artifact).ToList<Artifact>();
             var pesoLibrerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.size).ToList();
-            MBTotal = (assets.Select(a=>a.size).Sum() / 1024)/1024;
-            MBTotal += (cliente.size / 1024)/ 1024;
-            MBTotal += (pesoLibrerias.Sum() / 1024)/ 1024;
+            cantidadLibrerias = _descargarVersion.libraries.Where(a => a.downloads.artifact.url != "linux" || a.downloads.artifact.url != "macos").Count();
+                //.Select(a => a.downloads.artifact.url).ToList<Artifact>();
+            MBTotal = (assets.Select(a=>a.size).Sum() / 1024) / 1024;
+            MBTotal += (cliente.size / 1024) / 1024;
+            MBTotal += (pesoLibrerias.Sum() / 1024) / 1024;
             
             MBTotal = Math.Round(MBTotal, 2);
+            paso = 2;
+            descargando.ReportProgress(1);
 
-            int newSize = 10;
-            jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
-            jugarMC.ForeColor = Color.White;
-            jugarMC.BackColor = Color.FromArgb(200, 255, 210);
-            jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + "/ " + MBTotal + "MB";
-            if (Directory.Exists(Settings.minecraftPath + "libraries"))
+            if (!File.Exists(Settings.minecraftPath + "assets\\log_configs\\" + _descargarVersion.logging.client.file.id))
             {
-                foreach (Artifact library in Libreria)
+                var logConfig = "";
+                using (WebClient client = new WebClient())
                 {
-                    descargarLib(library.url, library.path);
-
-                    MBCurso += Math.Round((library.size / 1024) / 1024, 2);
-                    jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + "/ " + MBTotal + "MB";
-                    descargando.ReportProgress(i);
-                    i++;
+                    logConfig = client.DownloadString(_descargarVersion.logging.client.file.url);
                 }
+                File.WriteAllText(Settings.minecraftPath + "assets\\log_configs\\" + _descargarVersion.logging.client.file.id, logConfig);
             }
+
             foreach (var asset in assets)
             {
                 var firstPath = asset.hash.Substring(0, 2);
                 var fileName = asset.hash;
                 var urlInicial = "https://resources.download.minecraft.net";
                 var urlDescarga = urlInicial + "/" +firstPath + "/" + fileName;
+                assetsTotal = assets.Count();
                 var path = Settings.minecraftPath + "assets\\objects\\" + firstPath + "" +
                     "\\";
                 MBCurso += Math.Round((((asset.size)/1024)/1024), 2);
-                
-                jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + "/ " + MBTotal + "MB";
+                paso = 4;
                 crearPath:
                 if (Directory.Exists(path))
                 {
@@ -490,17 +492,43 @@ namespace CMLauncher
                     {
                         descargarArchivo(urlDescarga, path, fileName);
                     }
+                    assetsDescargados++;
                 }
                 else
                 {
                     Directory.CreateDirectory(path);
                     goto crearPath;
                 }
+                paso = 4;
+                
                 descargando.ReportProgress(i);
                 i++;
             }
             
-            descargarClient:
+            if (Directory.Exists(Settings.minecraftPath + "libraries"))
+            {
+
+                foreach (Artifact library in Libreria)
+                {
+                    if (!library.url.Contains("linux") || !library.url.Contains("macos"))
+                    {
+                        descargarLib(library.url, library.path);
+
+                        MBCurso += Math.Round((library.size / 1024) / 1024, 2);
+                        paso = 3;
+                        descargando.ReportProgress(i);
+                        libreriasDescargadas++;
+                        i++;
+                    }
+                    else
+                    {
+
+                    }
+
+                }
+            }
+            
+        descargarClient:
             if (!Directory.Exists(Settings.minecraftPath + "versions\\" + versionID))
             {
                 Directory.CreateDirectory(Settings.minecraftPath + "versions\\" + versionID);
@@ -522,6 +550,8 @@ namespace CMLauncher
                 versionesCbx.SelectedIndex = selecionado;
                 versionesCbx.DisplayMember = "id";
             }
+            paso = 4;
+            descargando.ReportProgress(i);
         }
 
         private void descargarLib(string url, string path)
@@ -582,6 +612,40 @@ namespace CMLauncher
             {
                 descargaBar.Value += 1;
             };
+            int newSize = 10;
+            switch (paso)
+            {
+                case 1:
+                    jugarMC.Enabled = false;
+                    jugarMC.Text = "Iniciando...";
+                    break;
+                case 2:
+                    
+                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
+                    jugarMC.ForeColor = Color.White;
+                    jugarMC.BackColor = Color.FromArgb(200, 255, 210);
+                    jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + " / " + MBTotal + "MB";
+                    break;
+                case 3:
+                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
+                    jugarMC.ForeColor = Color.White;
+                    jugarMC.BackColor = Color.FromArgb(200, 255, 210);
+                    jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + " / " + MBTotal + "MB \n Libreria: "+libreriasDescargadas+ " / "+ cantidadLibrerias;
+                    break;
+                case 4:
+                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
+                    jugarMC.ForeColor = Color.White;
+                    jugarMC.BackColor = Color.FromArgb(200, 255, 210);
+                    jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + " / " + MBTotal + "MB \n Asset: " + assetsDescargados + " / " + assetsTotal;
+                    //jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + "/ " + MBTotal + "MB";
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+            }
         }
 
         public void descargarArchivo(string url, string path, string fileName)
