@@ -784,9 +784,14 @@ namespace CMLauncher
 
         private void Cancelar_Click(object sender, EventArgs e)
         {
-            jugarMC.Enabled = true;
             jugarMC.Text = "Descargar";
             cancelar.Enabled = false;
+            jugarMC.Font = new Font(jugarMC.Font.FontFamily, 14.25f, FontStyle.Bold);
+            jugarMC.ForeColor = Color.White;
+            //59; 133; 38
+            jugarMC.BackColor = Color.FromArgb(59, 133, 38);
+            jugarMC.Text = "Descargar";
+            jugarMC.Enabled = true;
             descargando.CancelAsync();
         }
 
