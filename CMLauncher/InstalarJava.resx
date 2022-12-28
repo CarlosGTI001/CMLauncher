@@ -117,38 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        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
-</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Debe instalar java para que Minecraft se ejecute correctamente te damos dos opciones para poder realizarlo.
+
+1. Al seleccionar el boton Descargar, se descargara una version de java portable en la carpeta del launcher. (Enlace Oficial de Oracle).
+ 
+2. Puedes cancelar y descargar Java por tu cuenta 
+
+Nota: debe ser la version JDK de Oracle para que funcione correctamente y luego de instalar debes reiniciar tu equipo. </value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAYAAAAAAAEAIABZBwAAZgAAAICAAAABACAAKAgBAL8HAABAQAAAAQAgAChCAADnDwEAMDAAAAEA

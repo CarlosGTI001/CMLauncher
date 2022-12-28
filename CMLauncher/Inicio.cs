@@ -706,28 +706,40 @@ namespace CMLauncher
                 uuid = Settings.UUID,
                 gameJar = Settings.minecraftPath + "versions\\" + version + "\\" + version + ".jar"
             });
-            FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
-            StreamReader streamReader = new StreamReader(configuracion);
-            var _configuracion = streamReader.ReadToEnd();
-            if (Settings.fullScreen == true && _configuracion.Contains("fullscreen:false"))
+            volver:
+            if(File.Exists(Settings.minecraftPath + "options.txt"))
             {
-                _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
+                FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
+                StreamReader streamReader = new StreamReader(configuracion);
+                var _configuracion = streamReader.ReadToEnd();
+                if (Settings.fullScreen == true && _configuracion.Contains("fullscreen:false"))
+                {
+                    _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
+                }
+                if (Settings.fullScreen == false && _configuracion.Contains("fullscreen:true"))
+                {
+                    _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
+                }
+                StreamWriter guardar = new StreamWriter(configuracion);
+                guardar.Write(_configuracion);
+                guardar.Close();
+                configuracion.Close();
+                streamReader.Close();
             }
-            if (Settings.fullScreen == false && _configuracion.Contains("fullscreen:true"))
+            else
             {
-                _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
+                File.CreateText(Settings.minecraftPath + "options.txt");
+                
+                goto volver;
             }
-            StreamWriter guardar = new StreamWriter(configuracion);
-            guardar.Write(_configuracion);
-            guardar.Close();
-            configuracion.Close();
-            streamReader.Close();
+            
             /*Minecraft.ExecuteCommand(comando + "\n pause");*/
 
 
             Process process = new Process();
             process.EnableRaisingEvents = false;
-            process.StartInfo.FileName = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\runtime\\java-runtime-beta\\windows\\java-runtime-beta\\bin\\javaw.exe";
+            var directorio = Settings.javaPath + "bin\\javaw.exe";
+            process.StartInfo.FileName = directorio;
             //process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
             process.StartInfo.Arguments = comando;
             process.Start();

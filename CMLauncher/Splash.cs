@@ -36,8 +36,11 @@ namespace CMLauncher
                 settings.UUID = generador.UUID();
                 
             }
-            settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
-            
+            if (string.IsNullOrEmpty(settings.javaPath))
+            {
+                settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+            }
+
             if (string.IsNullOrEmpty(settings.minecraftPath) || settings.minecraftPath == "null")
             {
                 
@@ -200,31 +203,55 @@ namespace CMLauncher
         //}
         private void Load_Load(object sender, EventArgs e)
         {
+            InstalarJava instalarJava = new InstalarJava();
             barraDeCarga.Style = ProgressBarStyle.Marquee;
-            //if (!string.IsNullOrEmpty(settings.javaPath))
-            //{
-            //    MessageBox.Show("Necesitas java para iniciar este launcher", "Alerta");
-            //    Application.Exit();
-            //}
-            //else
-            //{
+            var javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
+            if (string.IsNullOrEmpty(settings.javaPath))
+            {
+                if (!Directory.Exists(Environment.GetEnvironmentVariable("JAVA_HOME")))
+                {
+                    this.Hide();
+                    if (instalarJava.ShowDialog() == DialogResult.OK)
+                    {
+                        this.Show();
+                        java = true;
+                    }
+                }
+                else
+                {
+                    settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME") + "\\";
+                    settings.Save();
+                    java = true;
+                }
+            }
+            else
+            {
+                if (!Directory.Exists(settings.javaPath))
+                {
+                    if(instalarJava.ShowDialog() == DialogResult.OK)
+                    {
 
-            //    //string ruta = "C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\versions\\1.19.3\\";
-            
-            //}
-
+                    }
+                }
+                else
+                {
+                    java = true;
+                }
+            }
         }
-        
+
 
         private void Load_Shown(object sender, EventArgs e)
         {
 
-            if (!segundoPlano.IsBusy)
+            if (!segundoPlano.IsBusy || java == true)
             {
                 segundoPlano.RunWorkerAsync();
             }
         }
         descargas Versiones = new descargas();
+        private bool java = false;
+
         private void segundoPlano_DoWork(object sender, DoWorkEventArgs e)
         {
             Versiones = CargaAV();

@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Inicio));
             this.jugarMC = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.acercaDe = new System.Windows.Forms.Button();
             this.abrirCarpeta = new System.Windows.Forms.Button();
@@ -48,8 +47,6 @@
             this.cargaDeJson = new System.ComponentModel.BackgroundWorker();
             this.descargando = new System.ComponentModel.BackgroundWorker();
             this.cancelar = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.arrastrar.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +68,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.webView21);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 17.25F);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox1.Location = new System.Drawing.Point(10, 47);
@@ -81,19 +77,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Novedades";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
-            // 
-            // webView21
-            // 
-            this.webView21.AllowExternalDrop = true;
-            this.webView21.CreationProperties = null;
-            this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webView21.Location = new System.Drawing.Point(3, 30);
-            this.webView21.Name = "webView21";
-            this.webView21.Size = new System.Drawing.Size(805, 475);
-            this.webView21.Source = new System.Uri("https://www.minecraft.net/", System.UriKind.Absolute);
-            this.webView21.TabIndex = 0;
-            this.webView21.ZoomFactor = 1D;
             // 
             // groupBox2
             // 
@@ -219,11 +202,11 @@
             // 
             // close
             // 
-            this.close.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
+            this.close.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.close.FlatAppearance.BorderSize = 0;
             this.close.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.close.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.close.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.close.ForeColor = System.Drawing.Color.White;
             this.close.Location = new System.Drawing.Point(992, 9);
             this.close.Margin = new System.Windows.Forms.Padding(0);
             this.close.Name = "close";
@@ -235,11 +218,11 @@
             // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(31)))), ((int)(((byte)(31)))));
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.button1.FlatAppearance.BorderSize = 0;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.button1.ForeColor = System.Drawing.Color.White;
             this.button1.Location = new System.Drawing.Point(946, 9);
             this.button1.Margin = new System.Windows.Forms.Padding(0);
             this.button1.Name = "button1";
@@ -319,8 +302,6 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Inicio_FormClosed);
             this.Load += new System.EventHandler(this.Inicio_Load);
             this.Shown += new System.EventHandler(this.Inicio_Shown);
-            this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.arrastrar.ResumeLayout(false);
@@ -348,7 +329,6 @@
         private System.Windows.Forms.ProgressBar descargaBar;
         private System.ComponentModel.BackgroundWorker cargaDeJson;
         private System.ComponentModel.BackgroundWorker descargando;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
         private System.Windows.Forms.Button cancelar;
     }
 }

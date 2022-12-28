@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Configuracion));
             this.arrastrar = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.guardarBtn = new System.Windows.Forms.Button();
@@ -35,19 +36,19 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.RMAX = new System.Windows.Forms.NumericUpDown();
             this.RMIN = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.directorio = new System.Windows.Forms.TextBox();
             this.examinarDirectorio = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.fullScreenCheck = new System.Windows.Forms.CheckBox();
             this.resolucionPanel = new System.Windows.Forms.Panel();
+            this.yNum = new System.Windows.Forms.NumericUpDown();
+            this.xNum = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.xNum = new System.Windows.Forms.NumericUpDown();
-            this.yNum = new System.Windows.Forms.NumericUpDown();
+            this.fullScreenCheck = new System.Windows.Forms.CheckBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.javaPath = new System.Windows.Forms.TextBox();
             this.examinarJavaPath = new System.Windows.Forms.Button();
@@ -58,8 +59,8 @@
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.resolucionPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.xNum)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yNum)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xNum)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -154,6 +155,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Memoria RAM";
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
+            this.label6.Location = new System.Drawing.Point(2, 101);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(249, 20);
+            this.label6.TabIndex = 19;
+            this.label6.Text = "Valor de RAM expresado en MB";
+            // 
             // RMAX
             // 
             this.RMAX.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
@@ -235,19 +246,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Pantalla";
             // 
-            // fullScreenCheck
-            // 
-            this.fullScreenCheck.AutoSize = true;
-            this.fullScreenCheck.ForeColor = System.Drawing.Color.White;
-            this.fullScreenCheck.Location = new System.Drawing.Point(18, 55);
-            this.fullScreenCheck.Name = "fullScreenCheck";
-            this.fullScreenCheck.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.fullScreenCheck.Size = new System.Drawing.Size(228, 33);
-            this.fullScreenCheck.TabIndex = 0;
-            this.fullScreenCheck.Text = "Pantalla Completa";
-            this.fullScreenCheck.UseVisualStyleBackColor = true;
-            this.fullScreenCheck.CheckedChanged += new System.EventHandler(this.fullScreenCheck_CheckedChanged);
-            // 
             // resolucionPanel
             // 
             this.resolucionPanel.Controls.Add(this.yNum);
@@ -258,6 +256,34 @@
             this.resolucionPanel.Name = "resolucionPanel";
             this.resolucionPanel.Size = new System.Drawing.Size(462, 81);
             this.resolucionPanel.TabIndex = 1;
+            // 
+            // yNum
+            // 
+            this.yNum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.yNum.ForeColor = System.Drawing.Color.White;
+            this.yNum.Location = new System.Drawing.Point(329, 27);
+            this.yNum.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.yNum.Name = "yNum";
+            this.yNum.Size = new System.Drawing.Size(95, 34);
+            this.yNum.TabIndex = 24;
+            // 
+            // xNum
+            // 
+            this.xNum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            this.xNum.ForeColor = System.Drawing.Color.White;
+            this.xNum.Location = new System.Drawing.Point(192, 27);
+            this.xNum.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.xNum.Name = "xNum";
+            this.xNum.Size = new System.Drawing.Size(95, 34);
+            this.xNum.TabIndex = 20;
             // 
             // label5
             // 
@@ -281,43 +307,18 @@
             this.label4.TabIndex = 23;
             this.label4.Text = "Resolucion:";
             // 
-            // label6
+            // fullScreenCheck
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.label6.Location = new System.Drawing.Point(2, 101);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(249, 20);
-            this.label6.TabIndex = 19;
-            this.label6.Text = "Valor de RAM expresado en MB";
-            // 
-            // xNum
-            // 
-            this.xNum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.xNum.ForeColor = System.Drawing.Color.White;
-            this.xNum.Location = new System.Drawing.Point(192, 27);
-            this.xNum.Maximum = new decimal(new int[] {
-            99999,
-            0,
-            0,
-            0});
-            this.xNum.Name = "xNum";
-            this.xNum.Size = new System.Drawing.Size(95, 34);
-            this.xNum.TabIndex = 20;
-            // 
-            // yNum
-            // 
-            this.yNum.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.yNum.ForeColor = System.Drawing.Color.White;
-            this.yNum.Location = new System.Drawing.Point(329, 27);
-            this.yNum.Maximum = new decimal(new int[] {
-            99999,
-            0,
-            0,
-            0});
-            this.yNum.Name = "yNum";
-            this.yNum.Size = new System.Drawing.Size(95, 34);
-            this.yNum.TabIndex = 24;
+            this.fullScreenCheck.AutoSize = true;
+            this.fullScreenCheck.ForeColor = System.Drawing.Color.White;
+            this.fullScreenCheck.Location = new System.Drawing.Point(18, 55);
+            this.fullScreenCheck.Name = "fullScreenCheck";
+            this.fullScreenCheck.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.fullScreenCheck.Size = new System.Drawing.Size(228, 33);
+            this.fullScreenCheck.TabIndex = 0;
+            this.fullScreenCheck.Text = "Pantalla Completa";
+            this.fullScreenCheck.UseVisualStyleBackColor = true;
+            this.fullScreenCheck.CheckedChanged += new System.EventHandler(this.fullScreenCheck_CheckedChanged);
             // 
             // groupBox4
             // 
@@ -371,7 +372,9 @@
             this.Controls.Add(this.arrastrar);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Configuracion";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Configuracion";
             this.Load += new System.EventHandler(this.Configuracion_Load);
@@ -387,8 +390,8 @@
             this.groupBox3.PerformLayout();
             this.resolucionPanel.ResumeLayout(false);
             this.resolucionPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.xNum)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.yNum)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.xNum)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
