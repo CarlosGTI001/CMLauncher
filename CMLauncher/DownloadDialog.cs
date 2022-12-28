@@ -50,7 +50,7 @@ namespace CMLauncher
                         string directorio;
                         foreach (string dir in carpetas)
                         {
-                            settings.javaPath = Path.GetFileName(dir) + "\\";
+                            settings.javaPath = Path.GetFileName(dir);
                         }
                         //foreach (var m in Directory.GetDirectories("runtime"))
                         //{
@@ -115,7 +115,7 @@ namespace CMLauncher
                 settings.Save();
                 this.DialogResult = DialogResult.OK;
             }
-            settings.javaPath = Directory.GetCurrentDirectory() + "\\" + settings.javaPath;
+            settings.javaPath = Directory.GetCurrentDirectory() + "\\" + settings.javaPath + "\\";
             settings.Save();
             this.DialogResult = DialogResult.OK;
 

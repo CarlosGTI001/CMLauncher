@@ -555,7 +555,7 @@ namespace CMLauncher
                     }
                 }
                 i++;
-                
+                GC.Collect();
                 
             }
             paso = 7;
