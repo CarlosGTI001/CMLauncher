@@ -119,6 +119,7 @@
     <Compile Include="DownloadDialog.Designer.cs">
       <DependentUpon>DownloadDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper\argumentos.cs" />
     <Compile Include="Modelos\DownloadInfo.cs" />
     <Compile Include="MessaBox.cs">
       <SubType>Form</SubType>
@@ -157,6 +158,7 @@
     <Compile Include="InstalarJava.Designer.cs">
       <DependentUpon>InstalarJava.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modelos\libreriasAnteriores.cs" />
     <Compile Include="Splash.cs">
       <SubType>Form</SubType>
     </Compile>

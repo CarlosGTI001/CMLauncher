@@ -22,6 +22,7 @@ using static CMLauncher.Helper.Minecraft;
 using System.Diagnostics;
 using static CMLauncher.Helper.administradorVersiones;
 using System.Windows.Shapes;
+using System.Runtime.Remoting.Lifetime;
 
 namespace CMLauncher
 {
@@ -46,7 +47,7 @@ namespace CMLauncher
         {
             InitializeComponent();
         }
-    HttpClient httpClient = new HttpClient();
+        HttpClient httpClient = new HttpClient();
         private void groupBox1_Enter(object sender, EventArgs e)
         {
 
@@ -57,22 +58,43 @@ namespace CMLauncher
         {
             Form form1 = this;
             Settings Settings = new Settings();
+            snap.Checked = Settings.snaptshot;
+            List<versiones> _versiones = new List<versiones>();
             //cargar url en el webview novedades
             if (temp != null)
+            {
+                
+                if (snap.Checked)
                 {
-                    versionesCbx.DataSource = temp.versions;
-                    versionesCbx.SelectedIndex = 0;
-                    //versionesCbx.ValueMember = "url";
-                    versionesCbx.DisplayMember = "id";
+                    _versiones = (List<versiones>)temp.versions;
                 }
-                userName.Text = Settings.userName;
+                else
+                {
+                    _versiones = temp.versions.Where(a => a.type.Equals("release")).ToList<versiones>();
+                }
+                versionesCbx.DataSource = _versiones;
+                versionesCbx.SelectedIndex = 0;
+                //versionesCbx.ValueMember = "url";
+                versionesCbx.DisplayMember = "id";
+            }
+            if (string.IsNullOrEmpty(Settings.ultimaVer))
+            {
+                Settings.ultimaVer = versionesCbx.Text;
+            }
+            else
+            {
+                var item = _versiones.Where(a => a.id == Settings.ultimaVer).FirstOrDefault();
+                int indice = _versiones.IndexOf(item);
+                versionesCbx.SelectedIndex = indice;
+            }
+            userName.Text = Settings.userName;
             GC.Collect();
             descargando.ProgressChanged += Descargando_ProgressChanged;
         }
 
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            
+
         }
 
         //public void cargar()
@@ -91,7 +113,7 @@ namespace CMLauncher
 
         private void Inicio_Shown(object sender, EventArgs e)
         {
-            
+
         }
 
         public descargas obtenerVersiones()
@@ -135,7 +157,7 @@ namespace CMLauncher
                 if (File.Exists("versiones.json"))
                 {
                     string json = System.IO.File.ReadAllText("versiones.json");
-                    if (string.IsNullOrEmpty(json)) 
+                    if (string.IsNullOrEmpty(json))
                     {
                         return null;
                     }
@@ -231,7 +253,7 @@ namespace CMLauncher
         {
             //si existe la version entonces cambia a jugar, de lo contrario Cambia
             //var version = obtenerUnaVersion(new Uri(versionesCbx.SelectedValue.ToString()));
-            
+
             //string comandos = "";
             //foreach(object objeto in version.arguments.jvm)
             //{
@@ -245,7 +267,7 @@ namespace CMLauncher
             //}
             //MessageBox.Show(game);
             //var archivo = version.downloads.client.file.url;
-            if(jugarMC.Text == "Jugar")
+            if (jugarMC.Text == "Jugar")
             {
                 JugarMC();
                 //Settings Settings = new Settings();
@@ -317,7 +339,7 @@ namespace CMLauncher
 
         private void arrastrar_Paint(object sender, PaintEventArgs e)
         {
-            
+
         }
 
         private void Inicio_FormClosed(object sender, FormClosedEventArgs e)
@@ -342,16 +364,20 @@ namespace CMLauncher
 
         private void versionesCbx_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(versionesCbx.SelectedIndex != -1)
+            if (versionesCbx.SelectedIndex != -1)
             {
                 var versionSeleccionada = ((versiones)versionesCbx.SelectedValue).descargado;
                 if (versionSeleccionada)
                 {
                     jugarMC.Text = "Jugar";
                 }
-                else {
+                else
+                {
                     jugarMC.Text = "Descargar";
                 }
+                Settings settings = new Settings();
+                settings.ultimaVer = versionesCbx.Text;
+                settings.Save();
                 versionUrl = ((versiones)versionesCbx.SelectedValue).url;
                 versionID = ((versiones)versionesCbx.SelectedValue).id;
             }
@@ -368,9 +394,9 @@ namespace CMLauncher
 
         private void lanzarMinecraft(object sender, EventArgs e)
         {
-            
+
         }
-        
+
         private void versionesCbx_SelectedValueChanged(object sender, EventArgs e)
         {
             if (versionesCbx.SelectedIndex != -1)
@@ -426,7 +452,7 @@ namespace CMLauncher
 
         public void iniciarDescarga()
         {
-            
+
         }
 
         bool cambiar = true;
@@ -449,20 +475,20 @@ namespace CMLauncher
             var minecraftPath = Settings.minecraftPath;
             var assets = descargar.ObtenerIndexAsset(url, _descargarVersion, minecraftPath);
             cantidad = assets.Count() + _descargarVersion.libraries.Count() + 6;
-            
-            
+
+
             i = 0;
             cambiar = false;
             var cliente = _descargarVersion.downloads.client;
-            var librerias = _descargarVersion.libraries.Select(a=>a.downloads.artifact.url).ToList();
-            var Libreria = _descargarVersion.libraries.Select(a=>a.downloads.artifact).ToList<Artifact>();
+            var librerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.url).ToList();
+            var Libreria = _descargarVersion.libraries.Select(a => a.downloads.artifact).ToList<Artifact>();
             var pesoLibrerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.size).ToList();
             cantidadLibrerias = _descargarVersion.libraries.Where(a => a.downloads.artifact.url != "linux" || a.downloads.artifact.url != "macos").Count();
-                //.Select(a => a.downloads.artifact.url).ToList<Artifact>();
-            MBTotal = (assets.Select(a=>a.size).Sum() / 1024) / 1024;
+            //.Select(a => a.downloads.artifact.url).ToList<Artifact>();
+            MBTotal = (assets.Select(a => a.size).Sum() / 1024) / 1024;
             MBTotal += (cliente.size / 1024) / 1024;
             MBTotal += (pesoLibrerias.Sum() / 1024) / 1024;
-            
+
             MBTotal = Math.Round(MBTotal, 2);
             paso = 2;
             descargando.ReportProgress(1);
@@ -482,16 +508,16 @@ namespace CMLauncher
                 var firstPath = asset.hash.Substring(0, 2);
                 var fileName = asset.hash;
                 var urlInicial = "https://resources.download.minecraft.net";
-                var urlDescarga = urlInicial + "/" +firstPath + "/" + fileName;
+                var urlDescarga = urlInicial + "/" + firstPath + "/" + fileName;
                 assetsTotal = assets.Count();
                 var path = Settings.minecraftPath + "assets\\objects\\" + firstPath + "" +
                     "\\";
-                MBCurso += Math.Round((((asset.size)/1024)/1024), 2);
+                MBCurso += Math.Round((((asset.size) / 1024) / 1024), 2);
                 paso = 4;
-                crearPath:
+            crearPath:
                 if (Directory.Exists(path))
                 {
-                    if (!File.Exists(path+fileName))
+                    if (!File.Exists(path + fileName))
                     {
                         descargarArchivo(urlDescarga, path, fileName);
                     }
@@ -503,11 +529,11 @@ namespace CMLauncher
                     goto crearPath;
                 }
                 paso = 4;
-                
+
                 descargando.ReportProgress(i);
                 i++;
             }
-            
+
             if (Directory.Exists(Settings.minecraftPath + "libraries"))
             {
 
@@ -556,22 +582,23 @@ namespace CMLauncher
                 }
                 i++;
                 GC.Collect();
-                
+
             }
             paso = 7;
             descargando.ReportProgress(i);
+            paso = 0;
         }
 
         private void descargarLib(string url, string path)
         {
             Settings settings = new Settings();
             byte[] fileData;
-            
+
             var pathDividido = path.Split('/');
             var archivo = pathDividido[pathDividido.Length - 1];
             var pathTemporal = "";
             var i = 0;
-            foreach(string _path in pathDividido)
+            foreach (string _path in pathDividido)
             {
                 if (i < pathDividido.Length - 1)
                 {
@@ -614,7 +641,7 @@ namespace CMLauncher
 
         private void Descargando_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            
+
             if (!cambiar)
             {
                 cambiar = true;
@@ -622,7 +649,7 @@ namespace CMLauncher
             }
             else
             {
-                if(!(i > descargaBar.Maximum))
+                if (!(i > descargaBar.Maximum))
                     descargaBar.Value += 1;
             };
             int newSize = 10;
@@ -642,7 +669,7 @@ namespace CMLauncher
                     jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
                     jugarMC.ForeColor = Color.White;
                     jugarMC.BackColor = Color.FromArgb(200, 255, 210);
-                    jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + " / " + MBTotal + "MB \n Libreria: "+libreriasDescargadas+ " / "+ cantidadLibrerias;
+                    jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + " / " + MBTotal + "MB \n Libreria: " + libreriasDescargadas + " / " + cantidadLibrerias;
                     break;
                 case 4:
                     jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
@@ -656,7 +683,7 @@ namespace CMLauncher
                     descargaBar.Style = ProgressBarStyle.Marquee;
                     break;
                 case 6:
-                    
+
                     break;
                 case 7:
                     temp = VerificarInstalados(temp, obtenerVersionesInstaladas());
@@ -677,7 +704,7 @@ namespace CMLauncher
                     break;
             }
         }
-        
+
         public void JugarMC()
         {
             Settings Settings = new Settings();
@@ -689,7 +716,7 @@ namespace CMLauncher
             //var directorioVersion = Directorios[i] + "\\";
             var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
             versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
-            var comando = Minecraft.ejecutar(new Minecraft.argumentos
+            var args = new Minecraft.argumentos
             {
                 minecraftPath = Settings.minecraftPath,
                 javapath = Settings.javaPath,
@@ -698,16 +725,18 @@ namespace CMLauncher
                 LauncherVersion = "0.0.1",
                 Xmx = Settings.ramMB,
                 Xmn = Settings.ramMB - (Settings.ramMB / 2),
-                Librerias = versionDArgs.libraries,
+                Librerias = versionDArgs.libraries.Distinct().ToList<Library>(),
                 UserName = userName.Text,
                 version = version,
                 tipoVersion = versionDArgs.type,
                 assetIndex = versionDArgs.assetIndex.id,
                 uuid = Settings.UUID,
                 gameJar = Settings.minecraftPath + "versions\\" + version + "\\" + version + ".jar"
-            });
-            volver:
-            if(File.Exists(Settings.minecraftPath + "options.txt"))
+            };
+            var librerias = args.Librerias.Select(a => a.name).Distinct().ToList();
+            var comando = Minecraft.ejecutar(args);
+        volver:
+            if (File.Exists(Settings.minecraftPath + "options.txt"))
             {
                 FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
                 StreamReader streamReader = new StreamReader(configuracion);
@@ -729,10 +758,10 @@ namespace CMLauncher
             else
             {
                 File.CreateText(Settings.minecraftPath + "options.txt");
-                
+
                 goto volver;
             }
-            
+
             /*Minecraft.ExecuteCommand(comando + "\n pause");*/
 
 
@@ -741,6 +770,7 @@ namespace CMLauncher
             var directorio = Settings.javaPath + "bin\\javaw.exe";
             process.StartInfo.FileName = directorio;
             //process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
+            //comando = "-Xss1M -Dminecraft.launcher.brand=CMLauncher -Dminecraft.launcher.version=0.0.1 -Xmx1000M -Xmn500M -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M -cp C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\ca\\weblite\\java-objc-bridge\\1.1\\java-objc-bridge-1.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\github\\oshi\\oshi-core\\6.2.2\\oshi-core-6.2.2.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\google\\code\\gson\\gson\\2.10\\gson-2.10.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\google\\guava\\failureaccess\\1.0.1\\failureaccess-1.0.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\google\\guava\\guava\\31.1-jre\\guava-31.1-jre.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\ibm\\icu\\icu4j\\71.1\\icu4j-71.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\authlib\\3.16.29\\authlib-3.16.29.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\blocklist\\1.0.10\\blocklist-1.0.10.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\brigadier\\1.0.18\\brigadier-1.0.18.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\datafixerupper\\5.0.28\\datafixerupper-5.0.28.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\javabridge\\2.0.25\\javabridge-2.0.25.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\logging\\1.1.1\\logging-1.1.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\patchy\\2.2.10\\patchy-2.2.10.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\text2speech\\1.13.9\\text2speech-1.13.9.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\text2speech\\1.13.9\\text2speech-1.13.9-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\commons-codec\\commons-codec\\1.15\\commons-codec-1.15.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\commons-io\\commons-io\\2.11.0\\commons-io-2.11.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\commons-logging\\commons-logging\\1.2\\commons-logging-1.2.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-buffer\\4.1.82.Final\\netty-buffer-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-codec\\4.1.82.Final\\netty-codec-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-common\\4.1.82.Final\\netty-common-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-handler\\4.1.82.Final\\netty-handler-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-resolver\\4.1.82.Final\\netty-resolver-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-transport-classes-epoll\\4.1.82.Final\\netty-transport-classes-epoll-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-transport-native-unix-common\\4.1.82.Final\\netty-transport-native-unix-common-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-transport\\4.1.82.Final\\netty-transport-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\it\\unimi\\dsi\\fastutil\\8.5.9\\fastutil-8.5.9.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\net\\java\\dev\\jna\\jna-platform\\5.12.1\\jna-platform-5.12.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\net\\java\\dev\\jna\\jna\\5.12.1\\jna-5.12.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\net\\sf\\jopt-simple\\jopt-simple\\5.0.4\\jopt-simple-5.0.4.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\commons\\commons-compress\\1.21\\commons-compress-1.21.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\commons\\commons-lang3\\3.12.0\\commons-lang3-3.12.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\httpcomponents\\httpclient\\4.5.13\\httpclient-4.5.13.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\httpcomponents\\httpcore\\4.4.15\\httpcore-4.4.15.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\logging\\log4j\\log4j-api\\2.19.0\\log4j-api-2.19.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\logging\\log4j\\log4j-core\\2.19.0\\log4j-core-2.19.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\logging\\log4j\\log4j-slf4j2-impl\\2.19.0\\log4j-slf4j2-impl-2.19.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\joml\\joml\\1.10.5\\joml-1.10.5.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-glfw\\3.3.1\\lwjgl-glfw-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-glfw\\3.3.1\\lwjgl-glfw-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-glfw\\3.3.1\\lwjgl-glfw-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-jemalloc\\3.3.1\\lwjgl-jemalloc-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-jemalloc\\3.3.1\\lwjgl-jemalloc-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-jemalloc\\3.3.1\\lwjgl-jemalloc-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-openal\\3.3.1\\lwjgl-openal-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-openal\\3.3.1\\lwjgl-openal-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-openal\\3.3.1\\lwjgl-openal-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-opengl\\3.3.1\\lwjgl-opengl-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-opengl\\3.3.1\\lwjgl-opengl-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-opengl\\3.3.1\\lwjgl-opengl-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-stb\\3.3.1\\lwjgl-stb-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-stb\\3.3.1\\lwjgl-stb-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-stb\\3.3.1\\lwjgl-stb-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-tinyfd\\3.3.1\\lwjgl-tinyfd-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-tinyfd\\3.3.1\\lwjgl-tinyfd-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-tinyfd\\3.3.1\\lwjgl-tinyfd-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl\\3.3.1\\lwjgl-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl\\3.3.1\\lwjgl-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl\\3.3.1\\lwjgl-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\slf4j\\slf4j-api\\2.0.1\\slf4j-api-2.0.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\versions\\1.19.3\\1.19.3.jar  -Dlog4j.configurationFile=C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\assets\\log_configs\\client-1.12.xml net.minecraft.client.main.Main --username CarlosGTI001 --version 1.19.3 --gameDir C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\ --assetsDir C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\assets\\ --assetIndex 2 --uuid 3ddc43ea5c044d7e8053d7eb283121ea --accessToken --userType msa --versionType release";
             process.StartInfo.Arguments = comando;
             process.Start();
             this.Hide();
@@ -759,9 +789,9 @@ namespace CMLauncher
             {
                 fileData = client.DownloadData(url);
             }
-            using (FileStream fs = new FileStream(path+fileName, FileMode.Create))
+            using (FileStream fs = new FileStream(path + fileName, FileMode.Create))
             {
-                foreach(byte b in fileData)
+                foreach (byte b in fileData)
                 {
                     fs.WriteByte(b);
                 }
@@ -776,7 +806,7 @@ namespace CMLauncher
             {
                 client.DownloadProgressChanged += Client_DownloadProgressChanged1;
                 fileData = client.DownloadData(url);
-                
+
             }
             using (FileStream fs = new FileStream(path + fileName, FileMode.Create))
             {
@@ -811,6 +841,22 @@ namespace CMLauncher
         {
             descargaBar.Value = 0;
             descargaBar.Style = ProgressBarStyle.Blocks;
+        }
+
+        private void Snaptshot_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings settings = new Settings();
+            settings.snaptshot = snap.Checked;
+            if (snap.Checked)
+            {
+                versionesCbx.DataSource = temp.versions;
+            }
+            else
+            {
+                versionesCbx.DataSource = temp.versions.Where(a => a.type.Equals("release")).ToList<versiones>();
+            }
+
+            settings.Save();
         }
     }
 }

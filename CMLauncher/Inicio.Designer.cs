@@ -1,4 +1,6 @@
-﻿namespace CMLauncher
+﻿using System;
+
+namespace CMLauncher
 {
     partial class Inicio
     {
@@ -32,6 +34,7 @@
             this.jugarMC = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.snap = new System.Windows.Forms.CheckBox();
             this.acercaDe = new System.Windows.Forms.Button();
             this.abrirCarpeta = new System.Windows.Forms.Button();
             this.editarConfiguracionBtn = new System.Windows.Forms.Button();
@@ -80,6 +83,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.snap);
             this.groupBox2.Controls.Add(this.acercaDe);
             this.groupBox2.Controls.Add(this.abrirCarpeta);
             this.groupBox2.Controls.Add(this.editarConfiguracionBtn);
@@ -97,6 +101,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Configuracion";
             this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
+            // 
+            // snap
+            // 
+            this.snap.AutoSize = true;
+            this.snap.Location = new System.Drawing.Point(11, 338);
+            this.snap.Name = "snap";
+            this.snap.Size = new System.Drawing.Size(151, 33);
+            this.snap.TabIndex = 8;
+            this.snap.Text = "Snaptshots";
+            this.snap.UseVisualStyleBackColor = true;
+            this.snap.CheckedChanged += new System.EventHandler(this.Snaptshot_CheckedChanged);
             // 
             // acercaDe
             // 
@@ -150,7 +165,7 @@
             // 
             this.userName.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.userName.ForeColor = System.Drawing.Color.White;
-            this.userName.Location = new System.Drawing.Point(10, 250);
+            this.userName.Location = new System.Drawing.Point(10, 225);
             this.userName.Name = "userName";
             this.userName.Size = new System.Drawing.Size(177, 34);
             this.userName.TabIndex = 4;
@@ -160,7 +175,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 17.25F);
             this.label2.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label2.Location = new System.Drawing.Point(5, 220);
+            this.label2.Location = new System.Drawing.Point(5, 195);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(119, 29);
             this.label2.TabIndex = 3;
@@ -171,7 +186,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 17.25F);
             this.label1.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.label1.Location = new System.Drawing.Point(6, 297);
+            this.label1.Location = new System.Drawing.Point(6, 272);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 29);
             this.label1.TabIndex = 2;
@@ -186,7 +201,7 @@
             this.versionesCbx.FormattingEnabled = true;
             this.versionesCbx.IntegralHeight = false;
             this.versionesCbx.ItemHeight = 24;
-            this.versionesCbx.Location = new System.Drawing.Point(10, 327);
+            this.versionesCbx.Location = new System.Drawing.Point(10, 302);
             this.versionesCbx.Name = "versionesCbx";
             this.versionesCbx.Size = new System.Drawing.Size(177, 32);
             this.versionesCbx.TabIndex = 1;
@@ -310,6 +325,7 @@
 
         }
 
+
         #endregion
 
         private System.Windows.Forms.Button jugarMC;
@@ -330,6 +346,7 @@
         private System.ComponentModel.BackgroundWorker cargaDeJson;
         private System.ComponentModel.BackgroundWorker descargando;
         private System.Windows.Forms.Button cancelar;
+        private System.Windows.Forms.CheckBox snap;
     }
 }
 
