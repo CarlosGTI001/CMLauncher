@@ -1,4 +1,4 @@
-﻿using CMLauncher.Properties;
+﻿using CLauncher.Properties;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
@@ -9,9 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using CMLauncher.Helper;
+using CLauncher.Helper;
 
-namespace CMLauncher
+namespace CLauncher
 {
     public partial class Configuracion : Form
     {

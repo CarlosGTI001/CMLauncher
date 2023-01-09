@@ -51,9 +51,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CMLauncher\CMLauncher.csproj">
+    <ProjectReference Include="..\CMLauncher\CLauncher.csproj">
       <Project>{9715acd2-2022-4b7a-bcb3-5b9d96e708c5}</Project>
-      <Name>CMLauncher</Name>
+      <Name>CLauncher</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

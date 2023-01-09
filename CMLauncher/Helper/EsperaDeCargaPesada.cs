@@ -1,4 +1,4 @@
-﻿using CMLauncher.Helper;
+﻿using CLauncher.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace CMLauncher
+namespace CLauncher
 {
 
     class EsperaDeCargaPesada

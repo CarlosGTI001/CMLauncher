@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CMLauncher
+namespace CLauncher
 {
     public partial class InstalarJava : Form
     {

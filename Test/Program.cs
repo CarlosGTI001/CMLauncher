@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CMLauncher.Modelos;
-using CMLauncher.Helper;
+using CLauncher.Modelos;
+using CLauncher.Helper;
 
 namespace Test
 {

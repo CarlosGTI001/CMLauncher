@@ -12,19 +12,19 @@ using System.Web;
 using System.Net.Http;
 using System.Security.Policy;
 using System.IO;
-using CMLauncher.Modelos;
+using CLauncher.Modelos;
 using System.Net;
 using File = System.IO.File;
 using static System.Net.WebRequestMethods;
-using CMLauncher.Properties;
-using CMLauncher.Helper;
-using static CMLauncher.Helper.Minecraft;
+using CLauncher.Properties;
+using CLauncher.Helper;
+using static CLauncher.Helper.Minecraft;
 using System.Diagnostics;
-using static CMLauncher.Helper.administradorVersiones;
+using static CLauncher.Helper.administradorVersiones;
 using System.Windows.Shapes;
 using System.Runtime.Remoting.Lifetime;
 
-namespace CMLauncher
+namespace CLauncher
 {
     public partial class Inicio : Form
     {
@@ -715,7 +715,19 @@ namespace CMLauncher
             //var version = Directorios[i].Split('\\')[7];
             //var directorioVersion = Directorios[i] + "\\";
             var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
+            
             versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
+            var archivo = Settings.minecraftPath + "assets\\indexes\\" + versionDArgs.assetIndex.id + ".json";
+            if (!File.Exists(archivo))
+            {
+                var index = versionDArgs.assetIndex.id;
+                string indexAsset;
+                using (WebClient webClient = new WebClient())
+                {
+                    indexAsset = webClient.DownloadString(versionDArgs.assetIndex.url);
+                    File.WriteAllText(archivo, indexAsset);
+                }
+            }
             var args = new Minecraft.argumentos
             {
                 minecraftPath = Settings.minecraftPath,
@@ -733,7 +745,14 @@ namespace CMLauncher
                 uuid = Settings.UUID,
                 gameJar = Settings.minecraftPath + "versions\\" + version + "\\" + version + ".jar"
             };
-            var librerias = args.Librerias.Select(a => a.name).Distinct().ToList();
+            var libreriasRepetidas = versionDArgs.libraries.Distinct().ToList<Library>();
+            var librerias = libreriasRepetidas.Select(a => a.name).Distinct().ToList();
+            List<Library> lib = new List<Library>();
+            foreach(var library in librerias)
+            {
+                lib.Add(libreriasRepetidas.Where(a => a.name == library).First());
+            }
+            args.Librerias = lib;
             var comando = Minecraft.ejecutar(args);
         volver:
             if (File.Exists(Settings.minecraftPath + "options.txt"))
@@ -749,6 +768,7 @@ namespace CMLauncher
                 {
                     _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
                 }
+                ;
                 StreamWriter guardar = new StreamWriter(configuracion);
                 guardar.Write(_configuracion);
                 guardar.Close();
@@ -757,8 +777,8 @@ namespace CMLauncher
             }
             else
             {
-                File.CreateText(Settings.minecraftPath + "options.txt");
-
+                File.WriteAllText(Settings.minecraftPath + "options.txt", "");
+                
                 goto volver;
             }
 
@@ -770,7 +790,6 @@ namespace CMLauncher
             var directorio = Settings.javaPath + "bin\\javaw.exe";
             process.StartInfo.FileName = directorio;
             //process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
-            //comando = "-Xss1M -Dminecraft.launcher.brand=CMLauncher -Dminecraft.launcher.version=0.0.1 -Xmx1000M -Xmn500M -XX:+UnlockExperimentalVMOptions -XX:+UseG1GC -XX:G1NewSizePercent=20 -XX:G1ReservePercent=20 -XX:MaxGCPauseMillis=50 -XX:G1HeapRegionSize=32M -cp C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\ca\\weblite\\java-objc-bridge\\1.1\\java-objc-bridge-1.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\github\\oshi\\oshi-core\\6.2.2\\oshi-core-6.2.2.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\google\\code\\gson\\gson\\2.10\\gson-2.10.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\google\\guava\\failureaccess\\1.0.1\\failureaccess-1.0.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\google\\guava\\guava\\31.1-jre\\guava-31.1-jre.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\ibm\\icu\\icu4j\\71.1\\icu4j-71.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\authlib\\3.16.29\\authlib-3.16.29.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\blocklist\\1.0.10\\blocklist-1.0.10.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\brigadier\\1.0.18\\brigadier-1.0.18.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\datafixerupper\\5.0.28\\datafixerupper-5.0.28.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\javabridge\\2.0.25\\javabridge-2.0.25.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\logging\\1.1.1\\logging-1.1.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\patchy\\2.2.10\\patchy-2.2.10.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\text2speech\\1.13.9\\text2speech-1.13.9.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\com\\mojang\\text2speech\\1.13.9\\text2speech-1.13.9-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\commons-codec\\commons-codec\\1.15\\commons-codec-1.15.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\commons-io\\commons-io\\2.11.0\\commons-io-2.11.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\commons-logging\\commons-logging\\1.2\\commons-logging-1.2.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-buffer\\4.1.82.Final\\netty-buffer-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-codec\\4.1.82.Final\\netty-codec-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-common\\4.1.82.Final\\netty-common-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-handler\\4.1.82.Final\\netty-handler-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-resolver\\4.1.82.Final\\netty-resolver-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-transport-classes-epoll\\4.1.82.Final\\netty-transport-classes-epoll-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-transport-native-unix-common\\4.1.82.Final\\netty-transport-native-unix-common-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\io\\netty\\netty-transport\\4.1.82.Final\\netty-transport-4.1.82.Final.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\it\\unimi\\dsi\\fastutil\\8.5.9\\fastutil-8.5.9.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\net\\java\\dev\\jna\\jna-platform\\5.12.1\\jna-platform-5.12.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\net\\java\\dev\\jna\\jna\\5.12.1\\jna-5.12.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\net\\sf\\jopt-simple\\jopt-simple\\5.0.4\\jopt-simple-5.0.4.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\commons\\commons-compress\\1.21\\commons-compress-1.21.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\commons\\commons-lang3\\3.12.0\\commons-lang3-3.12.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\httpcomponents\\httpclient\\4.5.13\\httpclient-4.5.13.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\httpcomponents\\httpcore\\4.4.15\\httpcore-4.4.15.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\logging\\log4j\\log4j-api\\2.19.0\\log4j-api-2.19.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\logging\\log4j\\log4j-core\\2.19.0\\log4j-core-2.19.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\apache\\logging\\log4j\\log4j-slf4j2-impl\\2.19.0\\log4j-slf4j2-impl-2.19.0.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\joml\\joml\\1.10.5\\joml-1.10.5.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-glfw\\3.3.1\\lwjgl-glfw-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-glfw\\3.3.1\\lwjgl-glfw-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-glfw\\3.3.1\\lwjgl-glfw-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-jemalloc\\3.3.1\\lwjgl-jemalloc-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-jemalloc\\3.3.1\\lwjgl-jemalloc-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-jemalloc\\3.3.1\\lwjgl-jemalloc-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-openal\\3.3.1\\lwjgl-openal-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-openal\\3.3.1\\lwjgl-openal-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-openal\\3.3.1\\lwjgl-openal-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-opengl\\3.3.1\\lwjgl-opengl-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-opengl\\3.3.1\\lwjgl-opengl-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-opengl\\3.3.1\\lwjgl-opengl-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-stb\\3.3.1\\lwjgl-stb-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-stb\\3.3.1\\lwjgl-stb-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-stb\\3.3.1\\lwjgl-stb-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-tinyfd\\3.3.1\\lwjgl-tinyfd-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-tinyfd\\3.3.1\\lwjgl-tinyfd-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl-tinyfd\\3.3.1\\lwjgl-tinyfd-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl\\3.3.1\\lwjgl-3.3.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl\\3.3.1\\lwjgl-3.3.1-natives-windows.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\lwjgl\\lwjgl\\3.3.1\\lwjgl-3.3.1-natives-windows-x86.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\libraries\\org\\slf4j\\slf4j-api\\2.0.1\\slf4j-api-2.0.1.jar;C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\versions\\1.19.3\\1.19.3.jar  -Dlog4j.configurationFile=C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\assets\\log_configs\\client-1.12.xml net.minecraft.client.main.Main --username CarlosGTI001 --version 1.19.3 --gameDir C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\ --assetsDir C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\assets\\ --assetIndex 2 --uuid 3ddc43ea5c044d7e8053d7eb283121ea --accessToken --userType msa --versionType release";
             process.StartInfo.Arguments = comando;
             process.Start();
             this.Hide();

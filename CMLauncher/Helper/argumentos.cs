@@ -1,4 +1,4 @@
-﻿using CMLauncher.Modelos;
+﻿using CLauncher.Modelos;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,9 +7,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using static CMLauncher.Helper.administradorVersiones;
+using static CLauncher.Helper.administradorVersiones;
 
-namespace CMLauncher.Helper
+namespace CLauncher.Helper
 {
     public class argumentos
     {
