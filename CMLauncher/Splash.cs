@@ -1,6 +1,6 @@
-﻿using CLauncher.Helper;
-using CLauncher.Modelos;
-using CLauncher.Properties;
+﻿using CMLauncher.Helper;
+using CMLauncher.Modelos;
+using CMLauncher.Properties;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
@@ -20,9 +20,9 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using File = System.IO.File;
 using System.Management;
-using static CLauncher.Helper.administradorVersiones;
+using static CMLauncher.Helper.administradorVersiones;
 
-namespace CLauncher
+namespace CMLauncher
 {
     public partial class Splash : Form
     {

@@ -1,4 +1,4 @@
-﻿using CLauncher.Modelos;
+﻿using CMLauncher.Modelos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
 using System.IO;
 
-namespace CLauncher.Helper
+namespace CMLauncher.Helper
 {
     public class Descargar
     {

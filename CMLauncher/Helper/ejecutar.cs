@@ -1,5 +1,5 @@
-﻿using CLauncher.Modelos;
-using CLauncher.Properties;
+﻿using CMLauncher.Modelos;
+using CMLauncher.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CLauncher.Helper
+namespace CMLauncher.Helper
 {
     public class Minecraft
     {

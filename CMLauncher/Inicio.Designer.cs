@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CLauncher
+namespace CMLauncher
 {
     partial class Inicio
     {
@@ -116,7 +116,7 @@ namespace CLauncher
             // acercaDe
             // 
             this.acercaDe.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(133)))), ((int)(((byte)(38)))));
-            this.acercaDe.BackgroundImage = global::CLauncher.Properties.Resources.info_2_48;
+            this.acercaDe.BackgroundImage = global::CMLauncher.Properties.Resources.info_2_48;
             this.acercaDe.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.acercaDe.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowText;
             this.acercaDe.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -132,7 +132,7 @@ namespace CLauncher
             // abrirCarpeta
             // 
             this.abrirCarpeta.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(133)))), ((int)(((byte)(38)))));
-            this.abrirCarpeta.BackgroundImage = global::CLauncher.Properties.Resources.folder_3_48;
+            this.abrirCarpeta.BackgroundImage = global::CMLauncher.Properties.Resources.folder_3_48;
             this.abrirCarpeta.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.abrirCarpeta.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowText;
             this.abrirCarpeta.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -148,7 +148,7 @@ namespace CLauncher
             // editarConfiguracionBtn
             // 
             this.editarConfiguracionBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(133)))), ((int)(((byte)(38)))));
-            this.editarConfiguracionBtn.BackgroundImage = global::CLauncher.Properties.Resources.settings_48;
+            this.editarConfiguracionBtn.BackgroundImage = global::CMLauncher.Properties.Resources.settings_48;
             this.editarConfiguracionBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.editarConfiguracionBtn.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowText;
             this.editarConfiguracionBtn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;

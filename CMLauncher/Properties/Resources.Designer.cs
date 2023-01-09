@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CLauncher.Properties {
+namespace CMLauncher.Properties {
     using System;
     
     

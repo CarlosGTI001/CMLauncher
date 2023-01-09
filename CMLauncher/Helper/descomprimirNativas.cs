@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace CMLauncher.Modelos
+namespace CMLauncher.Helper
 {
-    public class descargas
+    public class descomprimirNativas
     {
-        public ultimaVersion latest;
-        public IList<versiones> versions;
     }
 }

@@ -1,5 +1,5 @@
-﻿using CLauncher.Modelos;
-using CLauncher.Properties;
+﻿using CMLauncher.Modelos;
+using CMLauncher.Properties;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CLauncher.Helper
+namespace CMLauncher.Helper
 {
     static class administradorVersiones
     {

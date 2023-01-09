@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CLauncher.Modelos
+namespace CMLauncher.Modelos
 {
     public class versiones
     {

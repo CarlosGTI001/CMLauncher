@@ -1,4 +1,4 @@
-﻿using CLauncher.Properties;
+﻿using CMLauncher.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CLauncher
+namespace CMLauncher
 {
     public partial class DownloadDialog : Form
     {

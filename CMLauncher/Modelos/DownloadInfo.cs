@@ -1,4 +1,4 @@
-﻿namespace CLauncher
+﻿namespace CMLauncher
 {
     public class DownloadInfo
     {

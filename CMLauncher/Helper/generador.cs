@@ -1,4 +1,4 @@
-﻿using CLauncher.Properties;
+﻿using CMLauncher.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CLauncher.Helper
+namespace CMLauncher.Helper
 {
     static class generador
     {

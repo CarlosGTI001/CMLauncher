@@ -1,4 +1,4 @@
-﻿namespace CLauncher
+﻿namespace CMLauncher
 {
     partial class Configuracion
     {

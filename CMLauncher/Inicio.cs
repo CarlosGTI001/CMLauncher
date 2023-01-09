@@ -12,19 +12,19 @@ using System.Web;
 using System.Net.Http;
 using System.Security.Policy;
 using System.IO;
-using CLauncher.Modelos;
+using CMLauncher.Modelos;
 using System.Net;
 using File = System.IO.File;
 using static System.Net.WebRequestMethods;
-using CLauncher.Properties;
-using CLauncher.Helper;
-using static CLauncher.Helper.Minecraft;
+using CMLauncher.Properties;
+using CMLauncher.Helper;
+using static CMLauncher.Helper.Minecraft;
 using System.Diagnostics;
-using static CLauncher.Helper.administradorVersiones;
+using static CMLauncher.Helper.administradorVersiones;
 using System.Windows.Shapes;
 using System.Runtime.Remoting.Lifetime;
 
-namespace CLauncher
+namespace CMLauncher
 {
     public partial class Inicio : Form
     {
