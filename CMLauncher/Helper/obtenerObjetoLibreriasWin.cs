@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using CMLauncher.Modelos;
 using CMLauncher.Properties;
 using System.IO;
 using System.Net;
