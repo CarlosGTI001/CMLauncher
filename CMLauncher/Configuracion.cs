@@ -58,6 +58,7 @@ namespace CMLauncher
 
         private void salirBtn_Click(object sender, EventArgs e)
         {
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
@@ -78,6 +79,7 @@ namespace CMLauncher
                 x = int.Parse(xNum.Value.ToString()),
                 y = int.Parse(yNum.Value.ToString())
             });
+            this.DialogResult = DialogResult.OK;
             this.Close();
             generador.generarCarpetas();
         }

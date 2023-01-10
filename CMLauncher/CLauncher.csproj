@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="Helper\argumentos.cs" />
     <Compile Include="Helper\descomprimirNativas.cs" />
+    <Compile Include="Helper\obtenerObjetoLibreriasWin.cs" />
     <Compile Include="Modelos\DownloadInfo.cs" />
     <Compile Include="MessaBox.cs">
       <SubType>Form</SubType>

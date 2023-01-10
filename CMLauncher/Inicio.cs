@@ -23,6 +23,7 @@ using System.Diagnostics;
 using static CMLauncher.Helper.administradorVersiones;
 using System.Windows.Shapes;
 using System.Runtime.Remoting.Lifetime;
+using System.Threading;
 
 namespace CMLauncher
 {
@@ -72,8 +73,9 @@ namespace CMLauncher
                 {
                     _versiones = temp.versions.Where(a => a.type.Equals("release")).ToList<versiones>();
                 }
-                versionesCbx.DataSource = _versiones;
-                versionesCbx.SelectedIndex = 0;
+                cargarVersionUltima();
+                //versionesCbx.DataSource = _versiones;
+                //versionesCbx.SelectedIndex = 0;
                 //versionesCbx.ValueMember = "url";
                 versionesCbx.DisplayMember = "id";
             }
@@ -269,6 +271,9 @@ namespace CMLauncher
             //var archivo = version.downloads.client.file.url;
             if (jugarMC.Text == "Jugar")
             {
+                Settings settings = new Settings();
+                settings.ultimaVer = versionesCbx.Text;
+                settings.Save();
                 JugarMC();
                 //Settings Settings = new Settings();
                 //Settings.userName = userName.Text;
@@ -375,9 +380,14 @@ namespace CMLauncher
                 {
                     jugarMC.Text = "Descargar";
                 }
-                Settings settings = new Settings();
-                settings.ultimaVer = versionesCbx.Text;
-                settings.Save();
+                if(config != true)
+                {
+                    Settings settings = new Settings();
+                    settings.ultimaVer = versionesCbx.Text;
+                    settings.Save();
+                    
+                }
+                config = false;
                 versionUrl = ((versiones)versionesCbx.SelectedValue).url;
                 versionID = ((versiones)versionesCbx.SelectedValue).id;
             }
@@ -423,14 +433,46 @@ namespace CMLauncher
         private void editarConfiguracionBtn_Click(object sender, EventArgs e)
         {
             Configuracion configuracion = new Configuracion();
-            configuracion.ShowDialog();
-            temp = VerificarInstalados(temp, obtenerVersionesInstaladas());
+            if (configuracion.ShowDialog() == DialogResult.OK)
+            {
+                temp = VerificarInstalados(temp, obtenerVersionesInstaladas());
+                config = true;
+                cargarVersionUltima();
+            };
+            
+        }
+
+        public void cargarVersionUltima()
+        {
+            Settings Settings = new Settings();
+            List<versiones> _versiones = (List<versiones>)temp.versions;
             if (temp != null)
             {
-                versionesCbx.DataSource = temp.versions;
-                versionesCbx.SelectedIndex = 1;
-                versionesCbx.SelectedIndex = 0;
+
+                if (snap.Checked)
+                {
+                    _versiones = (List<versiones>)temp.versions;
+                }
+                else
+                {
+                    _versiones = temp.versions.Where(a => a.type.Equals("release")).ToList<versiones>();
+                }
+                config = true;
+                versionesCbx.DataSource = _versiones;
+                //versionesCbx.SelectedIndex = 0;
+                //versionesCbx.ValueMember = "url";
                 versionesCbx.DisplayMember = "id";
+                config = false;
+            }
+            if (string.IsNullOrEmpty(Settings.ultimaVer))
+            {
+                Settings.ultimaVer = versionesCbx.Text;
+            }
+            else
+            {
+                var item = _versiones.Where(a => a.id == Settings.ultimaVer).FirstOrDefault();
+                int indice = _versiones.IndexOf(item);
+                versionesCbx.SelectedIndex = indice;
             }
         }
 
@@ -459,6 +501,8 @@ namespace CMLauncher
         int cantidad;
         int paso;
         int i = 0;
+        private bool config = false;
+
         private void descargando_DoWork(object sender, DoWorkEventArgs e)
         {
             descargando.WorkerReportsProgress = true;
@@ -580,13 +624,17 @@ namespace CMLauncher
                         File.WriteAllText(Settings.minecraftPath + "versions\\" + versionID + "\\" + versionID + ".json", json);
                     }
                 }
-                i++;
-                GC.Collect();
-
+                paso = 7;
+                descargando.ReportProgress(i);
             }
-            paso = 7;
+            i++;
+            LibreriasNativas libreriasNativas = new LibreriasNativas();
+            libreriasNativas.descomprimirNativas(_descargarVersion);
+            paso = 7;            
             descargando.ReportProgress(i);
+            Thread.Sleep(2000);
             paso = 0;
+            GC.Collect();
         }
 
         private void descargarLib(string url, string path)
@@ -695,12 +743,13 @@ namespace CMLauncher
                         jugarMC.BackColor = Color.FromArgb(59, 133, 38);
                         jugarMC.Text = "Jugar";
                         jugarMC.Enabled = true;
-                        versionesCbx.DataSource = temp.versions;
-                        var selecionado = versionesCbx.SelectedIndex;
-                        versionesCbx.SelectedIndex = selecionado + 1;
-                        versionesCbx.SelectedIndex = selecionado;
-                        versionesCbx.DisplayMember = "id";
+                        //versionesCbx.DataSource = temp.versions;
+                        //var selecionado = versionesCbx.SelectedIndex;
+                        //versionesCbx.SelectedIndex = selecionado + 1;
+                        //versionesCbx.SelectedIndex = selecionado;
+                        //versionesCbx.DisplayMember = "id";
                     }
+                    cargarVersionUltima();
                     break;
             }
         }
@@ -717,6 +766,9 @@ namespace CMLauncher
             var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
             
             versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
+            LibWin libWin = new LibWin();
+            libWin.obtenerLibreriasNativas(json);
+            
             var archivo = Settings.minecraftPath + "assets\\indexes\\" + versionDArgs.assetIndex.id + ".json";
             if (!File.Exists(archivo))
             {
@@ -737,7 +789,7 @@ namespace CMLauncher
                 LauncherVersion = "0.0.1",
                 Xmx = Settings.ramMB,
                 Xmn = Settings.ramMB - (Settings.ramMB / 2),
-                Librerias = versionDArgs.libraries.Distinct().ToList<Library>(),
+                Librerias = JsonConvert.DeserializeObject<descargarVersion>(json).libraries,
                 UserName = userName.Text,
                 version = version,
                 tipoVersion = versionDArgs.type,
