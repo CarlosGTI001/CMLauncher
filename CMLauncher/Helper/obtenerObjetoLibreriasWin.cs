@@ -8,81 +8,191 @@ using Newtonsoft.Json;
 using CMLauncher.Properties;
 using System.IO;
 using System.Net;
+using System.IO.Compression;
+using System.Web.UI.WebControls.WebParts;
 
 namespace CMLauncher.Helper
 {
     public class LibWin
     {
-        public void descomprimirLibreriaNativas(Artifact artifact)
+        string[] librerias;
+        public void descomprimirLibreriaNativas(List<Artifact> _artifact, string ver)
         {
             Settings settings = new Settings();
-            var jar = artifact.path;
-            var dll = jar.Replace(".jar", ".dll");
-            var test = "temp\\" + artifact.path.Split('/')[artifact.path.Split('/').Length - 1];
+            var pa = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+            foreach (var artifact in _artifact)
+            {
+                var test = "temp\\" + artifact.path.Split('/')[artifact.path.Split('/').Length - 1];
+                librerias = Directory.GetFiles(pa);
+                if (Directory.Exists("temp"))
+                {
+                    if (!System.IO.File.Exists(test))
+                        descargarLib2(artifact.url, test);
+                }
+                else
+                {
+                    Directory.CreateDirectory("temp");
+                    if (!System.IO.File.Exists(test))
+                        descargarLib2(artifact.url, test);
+                }
+            }
+            foreach (var lib in librerias)
+            {
+                var dir = lib.Replace(".jar", ".zip").Split('/');
+                var zip = dir[dir.Length - 1];
+                System.IO.File.Move(lib, zip);
+                var directorioNativo = Path.Combine(settings.minecraftPath, "versions\\" + ver + "\\natives");
+                if (Directory.Exists(directorioNativo + "\\META-INF"))
+                {
+                    Directory.Delete(directorioNativo + "\\META-INF", true);
+                    ZipFile.ExtractToDirectory(zip, directorioNativo);
+                }
+                else
+                {
+                    ZipFile.ExtractToDirectory(zip, directorioNativo);
+                }
+            }
+        }
+
+        public void obtenerLibreriasNativas(string json){
             if (Directory.Exists("temp"))
             {
-                if (!System.IO.File.Exists(test))
-                    descargarLib2(artifact.url, test);
+                Directory.Delete("temp", true);
+                Directory.CreateDirectory("temp");
+                var obj = JsonConvert.DeserializeObject<dynamic>(json);
+                //var classs = obj["libraries"]["clasifiers"];
+                var other = obj.libraries;
+                string[] Librerias = new string[0];
+                List<Artifact> LibraryWindows = new List<Artifact>();
+                int _librerias = 0;
+                foreach (var lib in other)
+                {
+                    int contador = 0;
+                    foreach (var _lib in lib.downloads)
+                    {
+                        contador++;
+                    }
+                    if (contador > 1)
+                    {
+                        try
+                        {
+                            var libW = lib["downloads"]["classifiers"];
+                            int contador2 = 0;
+                            foreach (var l in libW)
+                            {
+                                contador2++;
+                            }
+                            if (contador2 > 1)
+                            {
+                                var winLib = libW["natives-windows"];
+                                string url = winLib.url;
+                                string path = winLib.path;
+                                LibraryWindows.Add(new Artifact
+                                {
+                                    url = url,
+                                    path = path,
+                                    size = winLib.size,
+                                    sha1 = winLib.sha1
+                                });
+                                _librerias++;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                }
+                Settings settings = new Settings();
+                foreach (var art in LibraryWindows)
+                {
+                    var directorioNativo = Path.Combine(settings.minecraftPath, "versions\\" + obj.id.ToString() + "\\natives");
+                    string[] cantidadLib = Directory.GetFiles(directorioNativo);
+                    if (cantidadLib.Length <= _librerias * 3 + 1)
+                    {
+                        descargarLib(art.url, art.path);
+                    }
+
+                }
+                var pa = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+                librerias = Directory.GetFiles(pa);
+                try
+                {
+                    descomprimirLibreriaNativas(LibraryWindows, obj.id.ToString());
+                }
+                catch
+                {
+
+                }
+                foreach (var limpiar in librerias)
+                {
+                    System.IO.File.Delete(limpiar.Replace(".jar", ".zip"));
+                }
             }
             else
             {
                 Directory.CreateDirectory("temp");
-                if(!System.IO.File.Exists("temp\\" + artifact.path.Split('\\')[artifact.path.Split('\\').Length - 1]))
-                    descargarLib2(artifact.url, artifact.path.Split('\\')[artifact.path.Split('\\').Length - 1]);
-            }
-            var librerias = Directory.GetFiles(test);
-            foreach(var lib in librerias)
-            {
-                System.IO.File.Move(lib, lib.Replace(".jar", ".zip"));
-            }
-        }
-        public void obtenerLibreriasNativas(string json){
-            var obj = JsonConvert.DeserializeObject<dynamic>(json);
-            //var classs = obj["libraries"]["clasifiers"];
-            var other = obj.libraries;
-            string[] Librerias = new string[0];
-            List<Artifact> LibraryWindows = new List<Artifact>();
-            
-            foreach(var lib in other)
-            {
-                int contador = 0;
-                foreach (var _lib in lib.downloads)
+                var obj = JsonConvert.DeserializeObject<dynamic>(json);
+                //var classs = obj["libraries"]["clasifiers"];
+                var other = obj.libraries;
+                string[] Librerias = new string[0];
+                List<Artifact> LibraryWindows = new List<Artifact>();
+                int _librerias = 0;
+                foreach (var lib in other)
                 {
-                    contador++;
-                }
-                if (contador > 1)
-                {
-                    try
+                    int contador = 0;
+                    foreach (var _lib in lib.downloads)
                     {
-                        var libW = lib["downloads"]["classifiers"];
-                        int contador2 = 0;
-                        foreach(var l in libW)
-                        {
-                            contador2++;
-                        }
-                        if (contador2 > 1)
-                        {
-                            var winLib = libW["natives-windows"];
-                            string url = winLib.url;
-                            string path = winLib.path;
-                            LibraryWindows.Add(new Artifact
-                            {
-                                url = url,
-                                path = path,
-                                size = winLib.size,
-                                sha1 = winLib.sha1
-                            });
-                        }
+                        contador++;
                     }
-                    catch(Exception e) { 
-                    
+                    if (contador > 1)
+                    {
+                        try
+                        {
+                            var libW = lib["downloads"]["classifiers"];
+                            int contador2 = 0;
+                            foreach (var l in libW)
+                            {
+                                contador2++;
+                            }
+                            if (contador2 > 1)
+                            {
+                                var winLib = libW["natives-windows"];
+                                string url = winLib.url;
+                                string path = winLib.path;
+                                LibraryWindows.Add(new Artifact
+                                {
+                                    url = url,
+                                    path = path,
+                                    size = winLib.size,
+                                    sha1 = winLib.sha1
+                                });
+                                _librerias++;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
                     }
                 }
-            }
-            foreach (var art in LibraryWindows)
-            {
-                descargarLib(art.url, art.path);
-                descomprimirLibreriaNativas(art);
+                Settings settings = new Settings();
+                foreach (var art in LibraryWindows)
+                {
+                    var directorioNativo = Path.Combine(settings.minecraftPath, "versions\\" + obj.id.ToString() + "\\natives");
+                    string[] cantidadLib = Directory.GetFiles(directorioNativo);
+                    if (cantidadLib.Length <= _librerias)
+                    {
+                        descargarLib(art.url, art.path);
+                    }
+                }
+                var pa = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+                librerias = Directory.GetFiles(pa);
+                descomprimirLibreriaNativas(LibraryWindows, obj.id.ToString());
+                foreach (var limpiar in librerias)
+                {
+                    System.IO.File.Delete(limpiar.Replace(".jar", ".zip"));
+                }
             }
         }
 
@@ -90,7 +200,6 @@ namespace CMLauncher.Helper
         {
             Settings settings = new Settings();
             byte[] fileData;
-
             var pathDividido = path.Split('/');
             var archivo = pathDividido[pathDividido.Length - 1];
             var pathTemporal = "";

@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CMLauncher.Helper
 {
@@ -20,7 +18,8 @@ namespace CMLauncher.Helper
             argumentos = argumentos.Append("-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump \"-Dos.name=Windows 10\"").ToArray();
             argumentos = argumentos.Append(" -Dos.version="+ _argumentos.verWindows).ToArray();
             argumentos = argumentos.Append(" -Xss1M").ToArray();
-            argumentos = argumentos.Append(" -Djava.library.path=C:\\Users\\carlo\\AppData\\Roaming\\.minecraft\\bin\\63875d644da5d7f29ff949399dfc3f3a37f22b12").ToArray();
+            //var directorioNativo = Path.Combine(Settings.minecraftPath, "versions\\" + _argumentos.version + "\\natives");
+            argumentos = argumentos.Append(@" -Djava.library.path=C:\Users\carlo\AppData\Roaming\.minecraft\versions\1.18.1\natives").ToArray();
             argumentos = argumentos.Append(" -Dminecraft.launcher.brand="+ _argumentos.LauncherBrand).ToArray();
             argumentos = argumentos.Append(" -Dminecraft.launcher.version=" + _argumentos.LauncherVersion).ToArray();
             argumentos = argumentos.Append(" -cp ").ToArray();
