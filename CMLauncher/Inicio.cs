@@ -926,7 +926,6 @@ namespace CMLauncher
             {
                 versionesCbx.DataSource = temp.versions.Where(a => a.type.Equals("release")).ToList<versiones>();
             }
-
             settings.Save();
         }
     }

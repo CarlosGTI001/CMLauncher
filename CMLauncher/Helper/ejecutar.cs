@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using static CMLauncher.Modelos.libreriasAnteriores;
 
 namespace CMLauncher.Helper
 {
@@ -23,16 +24,71 @@ namespace CMLauncher.Helper
             argumentos = argumentos.Append(" -Dminecraft.launcher.brand="+ _argumentos.LauncherBrand).ToArray();
             argumentos = argumentos.Append(" -Dminecraft.launcher.version=" + _argumentos.LauncherVersion).ToArray();
             argumentos = argumentos.Append(" -cp ").ToArray();
-            foreach (Library library in _argumentos.Librerias)
+            var libreriaAnterior = "";
+            var lib = new string[0];
+            var directorios = new string[0];
+            foreach (Modelos.Library library in _argumentos.Librerias)
             {
                 if(!library.downloads.artifact.path.Contains("linux") )
                 {
                     if (!library.downloads.artifact.path.Contains("macos"))
                     {
-                        argumentos = argumentos.Append((carpetaLibreria + library.downloads.artifact.path + ";").Replace('/', '\\')).ToArray();
+                            var temp = (carpetaLibreria + library.downloads.artifact.path + ";").Replace('/', '\\').ToArray();
+                            libreriaAnterior = (carpetaLibreria + library.downloads.artifact.path + ";").Replace('/', '\\');
+                        if (!library.downloads.artifact.path.Contains("natives"))
+                        {
+                            lib = lib.Append(library.name).ToArray();
+                        }
                     }
                 }
             }
+            Dictionary<string, string> libr = new Dictionary<string, string>();
+            var i = 0;
+            foreach (var l in lib)
+            {
+                var div = l.Split(':');
+                var ver = div[div.Length - 1];
+                libr.Add(l, ver);
+                i++;
+            }
+            var libAnterior = "";
+            var verAnterior = "";
+            Dictionary<string, string> libK = new Dictionary<string, string>();
+            foreach (var s in libr)
+            {
+                if(s.Key.Split(':').Length == 3)
+                    
+                    if (libAnterior == s.Key.Split(':')[0] + ':' + s.Key.Split(':')[1])
+                    {
+                        if (s.Value.CompareTo(verAnterior) > 0)
+                        {
+                            libK.Add(s.Key, s.Value);
+                            libK = libK.Where(a => a.Value != verAnterior).ToDictionary(k=>k.Key, k=>k.Value); 
+                        }
+                    }
+                    else
+                    {
+                        libK.Add(s.Key, s.Value); 
+                    }
+                else
+                    libK.Add(s.Key, s.Value);
+                libAnterior = s.Key.Split(':')[0] + ':' + s.Key.Split(':')[1];
+                verAnterior = s.Value;
+            }
+            int f = 0;
+            foreach(var s in libK)
+            {
+                var dir = "";
+                foreach(var m in _argumentos.Librerias)
+                {
+                    if(m.name == s.Key)
+                    {
+                        dir = m.name;
+                        argumentos = argumentos.Append((carpetaLibreria + m.downloads.artifact.path + ";").Replace('/', '\\')).ToArray();
+                    }
+                }
+            }
+            //remover el .jar y splite por - y \
             argumentos = argumentos.Append(_argumentos.gameJar).ToArray();
             argumentos = argumentos.Append(" -Xmx" + _argumentos.Xmx + "M").ToArray();
             argumentos = argumentos.Append(" -Xmn" + _argumentos.Xmn + "M").ToArray();
@@ -49,6 +105,7 @@ namespace CMLauncher.Helper
             var __arg = argumentos.Append(" --versionType " + _argumentos.tipoVersion).ToArray();
             
             var comando = "";
+
             foreach(var argumento in __arg)
             {
                 comando = comando + argumento.ToString();
@@ -90,7 +147,7 @@ namespace CMLauncher.Helper
             //Ram Minima
             public int Xmn { get; set; }
 
-            public List<Library> Librerias { get; set; }
+            public List<Modelos.Library> Librerias { get; set; }
             public string gameJar { get; set; }
             public string UserName { get; set; }
             public string version { get; set;  }

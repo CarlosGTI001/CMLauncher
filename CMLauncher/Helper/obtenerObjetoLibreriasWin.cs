@@ -60,9 +60,10 @@ namespace CMLauncher.Helper
                         ZipFile.ExtractToDirectory(zip, directorioNativo);
                     }
                 }
-                catch
+                catch(Exception e)
                 {
-
+                    var mensaje = e.Message;
+                    
                 }
                 numero++;
             }
