@@ -36,23 +36,39 @@ namespace CMLauncher.Helper
                         descargarLib2(artifact.url, test);
                 }
             }
+            var directorioNativo = Path.Combine(settings.minecraftPath, "versions\\" + ver + "\\natives");
+            if (Directory.Exists(directorioNativo))
+            {
+                Directory.Delete(directorioNativo, true);
+                Directory.CreateDirectory(directorioNativo);
+            }
+            var numero = 1;
             foreach (var lib in librerias)
             {
                 var dir = lib.Replace(".jar", ".zip").Split('/');
                 var zip = dir[dir.Length - 1];
                 System.IO.File.Move(lib, zip);
-                var directorioNativo = Path.Combine(settings.minecraftPath, "versions\\" + ver + "\\natives");
-                if (Directory.Exists(directorioNativo + "\\META-INF"))
+                try
                 {
-                    Directory.Delete(directorioNativo + "\\META-INF", true);
-                    ZipFile.ExtractToDirectory(zip, directorioNativo);
+                    if (Directory.Exists(directorioNativo + "\\META-INF"))
+                    {
+                        Directory.Delete(directorioNativo + "\\META-INF", true);
+                        ZipFile.ExtractToDirectory(zip, directorioNativo);
+                    }
+                    else
+                    {
+                        ZipFile.ExtractToDirectory(zip, directorioNativo);
+                    }
                 }
-                else
+                catch
                 {
-                    ZipFile.ExtractToDirectory(zip, directorioNativo);
+
                 }
+                numero++;
             }
         }
+
+
 
         public void obtenerLibreriasNativas(string json){
             if (Directory.Exists("temp"))
@@ -123,10 +139,6 @@ namespace CMLauncher.Helper
                 catch
                 {
 
-                }
-                foreach (var limpiar in librerias)
-                {
-                    System.IO.File.Delete(limpiar.Replace(".jar", ".zip"));
                 }
             }
             else
