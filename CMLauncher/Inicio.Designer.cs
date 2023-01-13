@@ -73,9 +73,9 @@ namespace CMLauncher
             // 
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 17.25F);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.groupBox1.Location = new System.Drawing.Point(10, 47);
+            this.groupBox1.Location = new System.Drawing.Point(12, 47);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(811, 508);
+            this.groupBox1.Size = new System.Drawing.Size(809, 508);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Novedades";
@@ -210,9 +210,9 @@ namespace CMLauncher
             // 
             // descargaBar
             // 
-            this.descargaBar.Location = new System.Drawing.Point(10, 561);
+            this.descargaBar.Location = new System.Drawing.Point(12, 561);
             this.descargaBar.Name = "descargaBar";
-            this.descargaBar.Size = new System.Drawing.Size(811, 29);
+            this.descargaBar.Size = new System.Drawing.Size(809, 29);
             this.descargaBar.TabIndex = 8;
             // 
             // close
@@ -317,6 +317,7 @@ namespace CMLauncher
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Inicio_FormClosed);
             this.Load += new System.EventHandler(this.Inicio_Load);
             this.Shown += new System.EventHandler(this.Inicio_Shown);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Inicio_Paint);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.arrastrar.ResumeLayout(false);

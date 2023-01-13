@@ -79,6 +79,7 @@
             this.Text = "cargando";
             this.Load += new System.EventHandler(this.Load_Load);
             this.Shown += new System.EventHandler(this.Load_Shown);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Splash_Paint);
             this.ResumeLayout(false);
             this.PerformLayout();
 

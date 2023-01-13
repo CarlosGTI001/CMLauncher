@@ -120,6 +120,7 @@
       <DependentUpon>DownloadDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper\argumentos.cs" />
+    <Compile Include="Helper\bordeRedondos.cs" />
     <Compile Include="Helper\descomprimirNativas.cs" />
     <Compile Include="Helper\obtenerObjetoLibreriasWin.cs" />
     <Compile Include="Modelos\DownloadInfo.cs" />

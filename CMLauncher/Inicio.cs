@@ -24,6 +24,8 @@ using static CMLauncher.Helper.administradorVersiones;
 using System.Windows.Shapes;
 using System.Runtime.Remoting.Lifetime;
 using System.Threading;
+using System.Drawing.Drawing2D;
+using System.Windows;
 
 namespace CMLauncher
 {
@@ -44,6 +46,12 @@ namespace CMLauncher
         int assetsDescargados = 0;
         int clienteDescargado = 0;
         int clienteTotal = 0;
+
+        private int borderRadius = 20;
+        private int borderSize = 2;
+        private Color borderColor = Color.FromArgb(31, 31, 31);
+        private Color bttonColor = Color.FromArgb(59, 133, 38);
+
         public Inicio()
         {
             InitializeComponent();
@@ -214,7 +222,7 @@ namespace CMLauncher
 
         private void close_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -234,7 +242,7 @@ namespace CMLauncher
             if (Arrastre == true)
             {
                 Location = PointToScreen(
-                    new Point(
+                    new System.Drawing.Point(
                             MousePosition.X - Location.X - ex, MousePosition.Y - Location.Y - ey
                         )
                     );
@@ -349,7 +357,7 @@ namespace CMLauncher
 
         private void Inicio_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
 
         private void Inicio_FormClosing(object sender, FormClosingEventArgs e)
@@ -749,19 +757,19 @@ namespace CMLauncher
                     jugarMC.Text = "Iniciando...";
                     break;
                 case 2:
-                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
+                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, System.Drawing.FontStyle.Bold);
                     jugarMC.ForeColor = Color.White;
                     jugarMC.BackColor = Color.FromArgb(200, 255, 210);
                     jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + " / " + MBTotal + "MB";
                     break;
                 case 3:
-                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
+                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, System.Drawing.FontStyle.Bold);
                     jugarMC.ForeColor = Color.White;
                     jugarMC.BackColor = Color.FromArgb(200, 255, 210);
                     jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + " / " + MBTotal + "MB \n Libreria: " + libreriasDescargadas + " / " + cantidadLibrerias;
                     break;
                 case 4:
-                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, FontStyle.Bold);
+                    jugarMC.Font = new Font(jugarMC.Font.FontFamily, newSize, System.Drawing.FontStyle.Bold);
                     jugarMC.ForeColor = Color.White;
                     jugarMC.BackColor = Color.FromArgb(200, 255, 210);
                     jugarMC.Text = "" + Math.Round(MBCurso) + "MB" + " / " + MBTotal + "MB \n Asset: " + assetsDescargados + " / " + assetsTotal;
@@ -778,7 +786,7 @@ namespace CMLauncher
                     temp = VerificarInstalados(temp, obtenerVersionesInstaladas());
                     if (temp != null)
                     {
-                        jugarMC.Font = new Font(jugarMC.Font.FontFamily, 14.25f, FontStyle.Bold);
+                        jugarMC.Font = new Font(jugarMC.Font.FontFamily, 14.25f, System.Drawing.FontStyle.Bold);
                         jugarMC.ForeColor = Color.White;
                         //59; 133; 38
                         jugarMC.BackColor = Color.FromArgb(59, 133, 38);
@@ -940,7 +948,7 @@ namespace CMLauncher
         {
             jugarMC.Text = "Descargar";
             cancelar.Enabled = false;
-            jugarMC.Font = new Font(jugarMC.Font.FontFamily, 14.25f, FontStyle.Bold);
+            jugarMC.Font = new Font(jugarMC.Font.FontFamily, 14.25f, System.Drawing.FontStyle.Bold);
             jugarMC.ForeColor = Color.White;
             //59; 133; 38
             jugarMC.BackColor = Color.FromArgb(59, 133, 38);
@@ -968,6 +976,28 @@ namespace CMLauncher
                 versionesCbx.DataSource = temp.versions.Where(a => a.type.Equals("release")).ToList<versiones>();
             }
             settings.Save();
+        }
+        bordeRedondos BordeRedondos = new bordeRedondos();
+        private void Inicio_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            System.Drawing.Rectangle rectForm = this.ClientRectangle;
+            int mWidht = rectForm.Width / 2;
+            int mHeight = rectForm.Height / 2;
+            var fbColors = BordeRedondos.GetFormBoundsColors(this);
+            //Top Left
+            BordeRedondos.DrawPath(rectForm, e.Graphics, fbColors.TopLeftColor, borderRadius);
+            //Top Right
+            System.Drawing.Rectangle rectTopRight = new System.Drawing.Rectangle(mWidht, rectForm.Y, mWidht, mHeight);
+            BordeRedondos.DrawPath(rectTopRight, e.Graphics, fbColors.TopRightColor, borderRadius);
+            //Bottom Left
+            System.Drawing.Rectangle rectBottomLeft = new System.Drawing.Rectangle(rectForm.X, rectForm.X + mHeight, mWidht, mHeight);
+            BordeRedondos.DrawPath(rectBottomLeft, e.Graphics, fbColors.BottomLeftColor, borderRadius);
+            //Bottom Right
+            System.Drawing.Rectangle rectBottomRight = new System.Drawing.Rectangle(mWidht, rectForm.Y + mHeight, mWidht, mHeight);
+            BordeRedondos.DrawPath(rectBottomRight, e.Graphics, fbColors.BottomRightColor, borderRadius);
+            //-> SET ROUNDED REGION AND BORDER
+            BordeRedondos.FormRegionAndBorder(this, borderRadius, e.Graphics, borderColor, borderSize);
         }
     }
 }
