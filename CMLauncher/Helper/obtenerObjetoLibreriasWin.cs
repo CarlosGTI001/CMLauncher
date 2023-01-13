@@ -10,6 +10,7 @@ using System.IO;
 using System.Net;
 using System.IO.Compression;
 using System.Web.UI.WebControls.WebParts;
+using static CMLauncher.Modelos.libreriasAnteriores;
 
 namespace CMLauncher.Helper
 {
@@ -28,6 +29,7 @@ namespace CMLauncher.Helper
                 {
                     if (!System.IO.File.Exists(test))
                         descargarLib2(artifact.url, test);
+                    librerias = Directory.GetFiles(pa);
                 }
                 else
                 {
@@ -80,14 +82,36 @@ namespace CMLauncher.Helper
                 //var classs = obj["libraries"]["clasifiers"];
                 var other = obj.libraries;
                 string[] Librerias = new string[0];
-                List<Artifact> LibraryWindows = new List<Artifact>();
+                List<Modelos.Artifact> LibraryWindows = new List<Modelos.Artifact>();
                 int _librerias = 0;
                 foreach (var lib in other)
                 {
                     int contador = 0;
+                    int clasifier = 0;
                     foreach (var _lib in lib.downloads)
                     {
                         contador++;
+                        try
+                        {
+                            
+                            foreach (var _class in _lib)
+                            {
+                                
+                                var classe = _class["natives-windows"];
+                                if (classe != null) {
+                                    var url = classe["url"].ToString();
+                                    var test = "temp\\" + classe["path"].ToString().Split('/')[classe["path"].ToString().Split('/').Length - 1];
+                                    descargarLib2(url, test);
+                                }
+                                
+                            }
+                            
+                        }
+                        catch
+                        {
+
+                        }
+                        
                     }
                     if (contador > 1)
                     {

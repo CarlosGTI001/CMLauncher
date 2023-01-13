@@ -64,7 +64,7 @@ namespace CMLauncher
             //cargar url en el webview novedades
             if (temp != null)
             {
-                
+
                 if (snap.Checked)
                 {
                     _versiones = (List<versiones>)temp.versions;
@@ -380,12 +380,12 @@ namespace CMLauncher
                 {
                     jugarMC.Text = "Descargar";
                 }
-                if(config != true)
+                if (config != true)
                 {
                     Settings settings = new Settings();
                     settings.ultimaVer = versionesCbx.Text;
                     settings.Save();
-                    
+
                 }
                 config = false;
                 versionUrl = ((versiones)versionesCbx.SelectedValue).url;
@@ -439,7 +439,7 @@ namespace CMLauncher
                 config = true;
                 cargarVersionUltima();
             };
-            
+
         }
 
         public void cargarVersionUltima()
@@ -523,11 +523,39 @@ namespace CMLauncher
 
             i = 0;
             cambiar = false;
-            var cliente = _descargarVersion.downloads.client;
-            var librerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.url).ToList();
-            var Libreria = _descargarVersion.libraries.Select(a => a.downloads.artifact).ToList<Artifact>();
-            var pesoLibrerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.size).ToList();
-            cantidadLibrerias = _descargarVersion.libraries.Where(a => a.downloads.artifact.url != "linux" || a.downloads.artifact.url != "macos").Count();
+            Client cliente = new Client();
+            List<string> librerias;
+            List<Artifact> Libreria;
+            List<Double> pesoLibrerias = new List<double>();
+            try
+            {
+                cliente = _descargarVersion.downloads.client;
+                librerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.url).ToList();
+                Libreria = _descargarVersion.libraries.Select(a => a.downloads.artifact).ToList<Artifact>();
+                pesoLibrerias = _descargarVersion.libraries.Select(a => a.downloads.artifact.size).ToList();
+                cantidadLibrerias = _descargarVersion.libraries.Where(a => a.downloads.artifact.url != "linux" || a.downloads.artifact.url != "macos").Count();
+            }
+            catch
+            {
+                var jsonObject = JsonConvert.DeserializeObject<dynamic>(json);
+                var size = jsonObject.downloads.client["size"];
+                var sz = size.Value;
+                cliente.size = double.Parse(sz.ToString());
+                Libreria = _descargarVersion.libraries.Select(a => a.downloads.artifact).ToList<Artifact>();
+                var t = Libreria;
+                foreach (var l in Libreria)
+                {
+                    try
+                    {
+                        pesoLibrerias.Add(l.size);
+                        cantidadLibrerias += 1;
+                    }
+                    catch { 
+                    
+                    }
+                }
+            }
+
             //.Select(a => a.downloads.artifact.url).ToList<Artifact>();
             MBTotal = (assets.Select(a => a.size).Sum() / 1024) / 1024;
             MBTotal += (cliente.size / 1024) / 1024;
@@ -536,16 +564,21 @@ namespace CMLauncher
             MBTotal = Math.Round(MBTotal, 2);
             paso = 2;
             descargando.ReportProgress(1);
-
-            if (!File.Exists(Settings.minecraftPath + "assets\\log_configs\\" + _descargarVersion.logging.client.file.id))
+            try
             {
-                var logConfig = "";
-                using (WebClient client = new WebClient())
+                if (!File.Exists(Settings.minecraftPath + "assets\\log_configs\\" + _descargarVersion.logging.client.file.id))
                 {
-                    logConfig = client.DownloadString(_descargarVersion.logging.client.file.url);
+                    var logConfig = "";
+                    using (WebClient client = new WebClient())
+                    {
+                        logConfig = client.DownloadString(_descargarVersion.logging.client.file.url);
+                    }
+                    File.WriteAllText(Settings.minecraftPath + "assets\\log_configs\\" + _descargarVersion.logging.client.file.id, logConfig);
                 }
-                File.WriteAllText(Settings.minecraftPath + "assets\\log_configs\\" + _descargarVersion.logging.client.file.id, logConfig);
+
             }
+            catch { }
+
 
             foreach (var asset in assets)
             {
@@ -583,19 +616,27 @@ namespace CMLauncher
 
                 foreach (Artifact library in Libreria)
                 {
-                    if (!library.url.Contains("linux") || !library.url.Contains("macos"))
+                    try
                     {
-                        descargarLib(library.url, library.path);
-                        MBCurso += Math.Round((library.size / 1024) / 1024, 2);
-                        paso = 3;
-                        descargando.ReportProgress(i);
-                        libreriasDescargadas++;
-                        i++;
+                        if (!library.url.Contains("linux") || !library.url.Contains("macos"))
+                        {
+                            descargarLib(library.url, library.path);
+                            MBCurso += Math.Round((library.size / 1024) / 1024, 2);
+                            paso = 3;
+                            descargando.ReportProgress(i);
+                            libreriasDescargadas++;
+                            i++;
+                        }
+                        else
+                        {
+
+                        }
                     }
-                    else
+                    catch
                     {
 
                     }
+                    
                 }
             }
             paso = 5;
@@ -630,7 +671,7 @@ namespace CMLauncher
             i++;
             LibreriasNativas libreriasNativas = new LibreriasNativas();
             libreriasNativas.descomprimirNativas(_descargarVersion);
-            paso = 7;            
+            paso = 7;
             descargando.ReportProgress(i);
             Thread.Sleep(2000);
             paso = 0;
@@ -764,11 +805,11 @@ namespace CMLauncher
             //var version = Directorios[i].Split('\\')[7];
             //var directorioVersion = Directorios[i] + "\\";
             var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
-            
+
             versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
             LibWin libWin = new LibWin();
             libWin.obtenerLibreriasNativas(json);
-            
+
             var archivo = Settings.minecraftPath + "assets\\indexes\\" + versionDArgs.assetIndex.id + ".json";
             if (!File.Exists(archivo))
             {
@@ -800,7 +841,7 @@ namespace CMLauncher
             var libreriasRepetidas = versionDArgs.libraries.Distinct().ToList<Library>();
             var librerias = libreriasRepetidas.Select(a => a.name).Distinct().ToList();
             List<Library> lib = new List<Library>();
-            foreach(var library in librerias)
+            foreach (var library in librerias)
             {
                 lib.Add(libreriasRepetidas.Where(a => a.name == library).First());
             }
@@ -830,7 +871,7 @@ namespace CMLauncher
             else
             {
                 File.WriteAllText(Settings.minecraftPath + "options.txt", "");
-                
+
                 goto volver;
             }
 

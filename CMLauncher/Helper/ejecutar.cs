@@ -1,5 +1,6 @@
 ﻿using CMLauncher.Modelos;
 using CMLauncher.Properties;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -27,20 +28,57 @@ namespace CMLauncher.Helper
             var libreriaAnterior = "";
             var lib = new string[0];
             var directorios = new string[0];
+            var path = "";
+
             foreach (Modelos.Library library in _argumentos.Librerias)
             {
-                if(!library.downloads.artifact.path.Contains("linux") )
+                try
                 {
-                    if (!library.downloads.artifact.path.Contains("macos"))
+                    if (!library.downloads.artifact.path.Contains("linux"))
                     {
+                        if (!library.downloads.artifact.path.Contains("macos"))
+                        {
                             var temp = (carpetaLibreria + library.downloads.artifact.path + ";").Replace('/', '\\').ToArray();
                             libreriaAnterior = (carpetaLibreria + library.downloads.artifact.path + ";").Replace('/', '\\');
-                        if (!library.downloads.artifact.path.Contains("natives"))
-                        {
-                            lib = lib.Append(library.name).ToArray();
+                            if (!library.downloads.artifact.path.Contains("natives"))
+                            {
+                                lib = lib.Append(library.name).ToArray();
+                            }
                         }
                     }
                 }
+                catch
+                {
+                    var json = System.IO.File.ReadAllText(Settings.minecraftPath+"\\versions\\"+_argumentos.version+"\\"+_argumentos.version+".json");
+                    var objectJson = JsonConvert.DeserializeObject<dynamic>(json);
+                    foreach(var obj in objectJson.libraries)
+                    {
+                        var downloads = obj["downloads"];
+                        var artifact = downloads["artifact"];
+                        try
+                        {
+                            path = artifact["path"].ToString();
+                            if (path.Contains("linux"))
+                            {
+                                if (path.Contains("macos"))
+                                {
+                                    var temp = (carpetaLibreria + path + ";").Replace('/', '\\').ToArray();
+                                    libreriaAnterior = (carpetaLibreria + path + ";").Replace('/', '\\');
+                                    if (!library.downloads.artifact.path.Contains("natives"))
+                                    {
+                                        lib = lib.Append(library.name).ToArray();
+                                    }
+                                }
+                            }
+                        }
+                        catch { 
+                        
+                        }
+                        
+                    }
+                    //var temp = (carpetaLibreria + objectJson.libraries.downloads)
+                }
+                
             }
             Dictionary<string, string> libr = new Dictionary<string, string>();
             var i = 0;
