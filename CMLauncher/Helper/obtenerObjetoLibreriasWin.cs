@@ -11,6 +11,7 @@ using System.Net;
 using System.IO.Compression;
 using System.Web.UI.WebControls.WebParts;
 using static CMLauncher.Modelos.libreriasAnteriores;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CMLauncher.Helper
 {
@@ -88,32 +89,35 @@ namespace CMLauncher.Helper
                 {
                     int contador = 0;
                     int clasifier = 0;
+                    int libp = 0;
                     foreach (var _lib in lib.downloads)
                     {
-                        contador++;
-                        try
-                        {
-                            
-                            foreach (var _class in _lib)
-                            {
-                                
-                                var classe = _class["natives-windows"];
-                                if (classe != null) {
-                                    var url = classe["url"].ToString();
-                                    var test = "temp\\" + classe["path"].ToString().Split('/')[classe["path"].ToString().Split('/').Length - 1];
-                                    descargarLib2(url, test);
-                                }
-                                
-                            }
-                            
-                        }
-                        catch
-                        {
-
-                        }
                         
+                            
+                            try
+                            {
+
+                                foreach (var _class in _lib)
+                                {
+
+                                    var classe = _class["natives-windows"];
+                                    if (classe != null)
+                                    {
+                                        var url = classe["url"].ToString();
+                                        var test = "temp\\" + classe["path"].ToString().Split('/')[classe["path"].ToString().Split('/').Length - 1];
+                                        descargarLib2(url, test);
+                                        contador++;
+                                    }
+
+                                }
+
+                            }
+                            catch
+                            {
+
+                            }
                     }
-                    if (contador > 1)
+                    if (contador > 0)
                     {
                         try
                         {
@@ -141,6 +145,16 @@ namespace CMLauncher.Helper
                         catch (Exception e)
                         {
 
+                        }
+                    }
+                    else
+                    {
+                        var Art = JsonConvert.DeserializeObject<descargarVersion>(json);
+                        
+                        foreach (var a in Art.libraries.Select(a => a.downloads.artifact).Where(a => a.path.Contains("natives-windows")))
+                        {
+                            var test = "temp\\" + a.path.Split('/')[a.path.Split('/').Length - 1];
+                            descargarLib2(a.url, test);
                         }
                     }
                 }

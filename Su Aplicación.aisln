@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DOCUMENT Type="Advanced Installer Solution" CreateVersion="20.2" version="20.2" Id="{051D8911-107C-43D5-A848-4231B13B5907}">
+  <PROJECT Path="..\..\..\..\Documents\Advanced Installer\Projects\Su Aplicación\Su Aplicación.aip" Id="{DBC1E37A-44FB-401E-86D7-478AB8968F29}" Startup="true"/>
+  <PROJECT Path="..\..\..\..\Documents\Advanced Installer\Projects\Su Aplicación 1\Su Aplicación.aip" Id="{8AB37C2F-DD19-4A95-A17D-A9F33A122744}" Startup="false"/>
+</DOCUMENT>

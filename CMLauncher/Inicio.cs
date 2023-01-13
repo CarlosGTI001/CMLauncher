@@ -835,7 +835,7 @@ namespace CMLauncher
                 javapath = Settings.javaPath,
                 verWindows = "10.0",
                 LauncherBrand = "CMLauncher",
-                LauncherVersion = "0.0.1",
+                LauncherVersion = "24",
                 Xmx = Settings.ramMB,
                 Xmn = Settings.ramMB - (Settings.ramMB / 2),
                 Librerias = JsonConvert.DeserializeObject<descargarVersion>(json).libraries,
@@ -861,13 +861,28 @@ namespace CMLauncher
                 FileStream configuracion = File.Open(Settings.minecraftPath + "options.txt", FileMode.Open);
                 StreamReader streamReader = new StreamReader(configuracion);
                 var _configuracion = streamReader.ReadToEnd();
-                if (Settings.fullScreen == true && _configuracion.Contains("fullscreen:false"))
+                if (Settings.fullScreen == true)
                 {
-                    _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
+                    if(_configuracion == "")
+                    {
+                        _configuracion += "\nfullscreen:true";
+                    }
+                    else
+                    {
+                        _configuracion = _configuracion.Replace("fullscreen:false", "fullscreen:true");
+                    }
+                    
                 }
-                if (Settings.fullScreen == false && _configuracion.Contains("fullscreen:true"))
+                if (Settings.fullScreen == false)
                 {
-                    _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
+                    if (_configuracion == "")
+                    {
+                        _configuracion += "\nfullscreen:false";
+                    }
+                    else
+                    {
+                        _configuracion = _configuracion.Replace("fullscreen:true", "fullscreen:false");
+                    }
                 }
                 ;
                 StreamWriter guardar = new StreamWriter(configuracion);
