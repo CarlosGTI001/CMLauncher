@@ -50,7 +50,7 @@ namespace CMLauncher
                         string directorio;
                         foreach (string dir in carpetas)
                         {
-                            settings.javaPath = Path.GetFileName(dir);
+                            settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
                         }
                         //foreach (var m in Directory.GetDirectories("runtime"))
                         //{
@@ -72,7 +72,7 @@ namespace CMLauncher
                         string directorio;
                         foreach (string dir in carpetas)
                         {
-                            settings.javaPath = dir;
+                            settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
                         }
                         //foreach (var m in Directory.GetDirectories("runtime"))
                         //{
@@ -104,7 +104,7 @@ namespace CMLauncher
                     string directorio;
                     foreach(string dir in carpetas)
                     {
-                        settings.javaPath = Path.GetFileName(dir);
+                        settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
                     }
                     //foreach (var m in Directory.GetDirectories("runtime"))
                     //{
@@ -115,11 +115,10 @@ namespace CMLauncher
                 settings.Save();
                 this.DialogResult = DialogResult.OK;
             }
-            settings.javaPath = Directory.GetCurrentDirectory() + "\\" + settings.javaPath + "\\";
             settings.Save();
             this.DialogResult = DialogResult.OK;
 
-        }
+            }
 
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {

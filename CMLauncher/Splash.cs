@@ -40,6 +40,7 @@ namespace CMLauncher
             this.FormBorderStyle = FormBorderStyle.None;
             this.Padding = new Padding(borderSize);
             this.BackColor = borderColor;
+            var str = Environment.GetEnvironmentVariable("JAVA_HOME");
             if (settings.UUID == "")
             {
                 settings.UUID = generador.UUID();
@@ -297,36 +298,105 @@ namespace CMLauncher
             InstalarJava instalarJava = new InstalarJava();
             barraDeCarga.Style = ProgressBarStyle.Marquee;
             var javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
-            if (string.IsNullOrEmpty(settings.javaPath))
+            if (Directory.Exists("runtime"))
             {
-                if (!Directory.Exists(Environment.GetEnvironmentVariable("JAVA_HOME")))
+                if(Directory.GetDirectories("runtime").Length > 0)
                 {
-                    this.Hide();
-                    if (instalarJava.ShowDialog() == DialogResult.OK)
+
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(settings.javaPath))
                     {
-                        this.Show();
+                        if (!Directory.Exists(Environment.GetEnvironmentVariable("JAVA_HOME")))
+                        {
+                            if (!Directory.Exists(settings.javaPath))
+                            {
+                                if (instalarJava.ShowDialog() == DialogResult.OK)
+                                {
+                                    this.Show();
+                                    java = true;
+                                }
+                            }
+                            else
+                            {
+                                this.Hide();
+                                if (instalarJava.ShowDialog() == DialogResult.OK)
+                                {
+                                    this.Show();
+                                    java = true;
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME") + "\\";
+                            settings.Save();
+                            java = true;
+                        }
+                    }
+                    else
+                    {
+                        if (!Directory.Exists(settings.javaPath))
+                        {
+                            if (instalarJava.ShowDialog() == DialogResult.OK)
+                            {
+                                java = true;
+                            }
+                        }
+                        else
+                        {
+                            java = true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(settings.javaPath))
+                {
+                    if (!Directory.Exists(Environment.GetEnvironmentVariable("JAVA_HOME")))
+                    {
+                        if (!Directory.Exists(settings.javaPath))
+                        {
+                            if (instalarJava.ShowDialog() == DialogResult.OK)
+                            {
+                                this.Show();
+                                java = true;
+                            }
+                        }
+                        else
+                        {
+                            this.Hide();
+                            if (instalarJava.ShowDialog() == DialogResult.OK)
+                            {
+                                this.Show();
+                                java = true;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME") + "\\";
+                        settings.Save();
                         java = true;
                     }
                 }
                 else
                 {
-                    settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME") + "\\";
-                    settings.Save();
-                    java = true;
-                }
-            }
-            else
-            {
-                if (!Directory.Exists(settings.javaPath))
-                {
-                    if(instalarJava.ShowDialog() == DialogResult.OK)
+                    if (!Directory.Exists(settings.javaPath))
                     {
-
+                        if (instalarJava.ShowDialog() == DialogResult.OK)
+                        {
+                            java = true;
+                        }
                     }
-                }
-                else
-                {
-                    java = true;
+                    else
+                    {
+                        java = true;
+                    }
                 }
             }
         }
