@@ -894,17 +894,23 @@ namespace CMLauncher
             else
             {
                 File.WriteAllText(Settings.minecraftPath + "options.txt", "");
-
                 goto volver;
             }
 
             /*Minecraft.ExecuteCommand(comando + "\n pause");*/
-
-
             Process process = new Process();
             process.EnableRaisingEvents = false;
-            var directorio = Settings.javaPath + "bin\\javaw.exe";
-            process.StartInfo.FileName = directorio;
+            if (Settings.javaPath[Settings.javaPath.Length - 1] != '\\')
+            {
+                var directorio = Settings.javaPath + "\\bin\\javaw.exe";
+                process.StartInfo.FileName = directorio;
+            }
+            else
+            {
+                var directorio = Settings.javaPath + "bin\\javaw.exe";
+                process.StartInfo.FileName = directorio;
+            }
+            
             //process.StartInfo.FileName = "" + "\\bin\\javaw.exe";
             process.StartInfo.Arguments = comando;
             process.Start();
