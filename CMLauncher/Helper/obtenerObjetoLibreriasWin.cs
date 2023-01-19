@@ -63,10 +63,10 @@ namespace CMLauncher.Helper
                         ZipFile.ExtractToDirectory(zip, directorioNativo);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     var mensaje = e.Message;
-                    
+
                 }
                 numero++;
             }
@@ -74,7 +74,8 @@ namespace CMLauncher.Helper
 
 
 
-        public void obtenerLibreriasNativas(string json){
+        public void obtenerLibreriasNativas(string json)
+        {
             if (Directory.Exists("temp"))
             {
                 Directory.Delete("temp", true);
@@ -92,30 +93,30 @@ namespace CMLauncher.Helper
                     int libp = 0;
                     foreach (var _lib in lib.downloads)
                     {
-                        
-                            
-                            try
+
+
+                        try
+                        {
+
+                            foreach (var _class in _lib)
                             {
 
-                                foreach (var _class in _lib)
+                                var classe = _class["natives-windows"];
+                                if (classe != null)
                                 {
-
-                                    var classe = _class["natives-windows"];
-                                    if (classe != null)
-                                    {
-                                        var url = classe["url"].ToString();
-                                        var test = "temp\\" + classe["path"].ToString().Split('/')[classe["path"].ToString().Split('/').Length - 1];
-                                        descargarLib2(url, test);
-                                        contador++;
-                                    }
-
+                                    var url = classe["url"].ToString();
+                                    var test = "temp\\" + classe["path"].ToString().Split('/')[classe["path"].ToString().Split('/').Length - 1];
+                                    descargarLib2(url, test);
+                                    contador++;
                                 }
 
                             }
-                            catch
-                            {
 
-                            }
+                        }
+                        catch
+                        {
+
+                        }
                     }
                     if (contador > 0)
                     {
@@ -153,10 +154,10 @@ namespace CMLauncher.Helper
                         try
                         {
                             foreach (var a in Art.libraries.Select(f => f.downloads.artifact).Where(f => f.path.Contains("natives-windows")))
-                        {
-                            var test = "temp\\" + a.path.Split('/')[a.path.Split('/').Length - 1];
-                            descargarLib2(a.url, test);
-                        }
+                            {
+                                var test = "temp\\" + a.path.Split('/')[a.path.Split('/').Length - 1];
+                                descargarLib2(a.url, test);
+                            }
                         }
                         catch (Exception e)
                         {
@@ -354,5 +355,5 @@ namespace CMLauncher.Helper
         }
     }
 
-    
+
 }

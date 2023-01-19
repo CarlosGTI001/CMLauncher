@@ -815,10 +815,12 @@ namespace CMLauncher
             var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
 
             versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
-            LibWin libWin = new LibWin();
-            libWin.obtenerLibreriasNativas(json);
-
+            if (Directory.GetFiles(Settings.minecraftPath + "versions\\" + version + "\\natives\\").Count() < 0){
+                LibWin libWin = new LibWin();
+                libWin.obtenerLibreriasNativas(json);
+            }
             var archivo = Settings.minecraftPath + "assets\\indexes\\" + versionDArgs.assetIndex.id + ".json";
+            
             if (!File.Exists(archivo))
             {
                 var index = versionDArgs.assetIndex.id;
