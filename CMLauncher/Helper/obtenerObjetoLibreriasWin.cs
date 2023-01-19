@@ -150,12 +150,19 @@ namespace CMLauncher.Helper
                     else
                     {
                         var Art = JsonConvert.DeserializeObject<descargarVersion>(json);
-                        
-                        foreach (var a in Art.libraries.Select(a => a.downloads.artifact).Where(a => a.path.Contains("natives-windows")))
+                        try
+                        {
+                            foreach (var a in Art.libraries.Select(f => f.downloads.artifact).Where(f => f.path.Contains("natives-windows")))
                         {
                             var test = "temp\\" + a.path.Split('/')[a.path.Split('/').Length - 1];
                             descargarLib2(a.url, test);
                         }
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+
                     }
                 }
                 Settings settings = new Settings();
