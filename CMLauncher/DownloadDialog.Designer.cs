@@ -33,6 +33,7 @@
             this.descargaProgreso = new System.Windows.Forms.ProgressBar();
             this.button1 = new System.Windows.Forms.Button();
             this.close = new System.Windows.Forms.Button();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // progresoLbl
@@ -86,6 +87,11 @@
             this.close.UseVisualStyleBackColor = false;
             this.close.Click += new System.EventHandler(this.close_Click);
             // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
+            // 
             // DownloadDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -117,5 +123,6 @@
         private System.Windows.Forms.ProgressBar descargaProgreso;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button close;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }

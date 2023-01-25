@@ -27,7 +27,7 @@ namespace CMLauncher
 {
     public partial class Splash : Form
     {
-        Settings settings = new Settings();
+        
 
         private int borderRadius = 20;
         private int borderSize = 2;
@@ -37,6 +37,8 @@ namespace CMLauncher
         public Splash()
         {
             InitializeComponent();
+            Settings settings = new Settings();
+            settings.Reset();
             this.FormBorderStyle = FormBorderStyle.None;
             this.Padding = new Padding(borderSize);
             this.BackColor = borderColor;
@@ -46,9 +48,21 @@ namespace CMLauncher
                 settings.UUID = generador.UUID();
                 
             }
-            if (string.IsNullOrEmpty(settings.javaPath))
+            if (string.IsNullOrEmpty(settings.javaPath) && !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("JAVA_HOME")))
             {
                 settings.javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+                var m = settings.javaPath;
+                if (!Directory.Exists(settings.javaPath))
+                {
+                    settings.javaPath = "";
+                }
+            }
+            else
+            {
+                if(!Directory.Exists(settings.javaPath))
+                {
+                    settings.javaPath = "";
+                }
             }
 
             if (string.IsNullOrEmpty(settings.minecraftPath) || settings.minecraftPath == "null")
@@ -295,12 +309,13 @@ namespace CMLauncher
         //}
         private void Load_Load(object sender, EventArgs e)
         {
+            Settings settings = new Settings();
             InstalarJava instalarJava = new InstalarJava();
             barraDeCarga.Style = ProgressBarStyle.Marquee;
             var javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
-            if (Directory.Exists("runtime"))
+            if (Directory.Exists("java"))
             {
-                if(Directory.GetDirectories("runtime").Length > 0)
+                if(Directory.GetDirectories("java").Length > 0)
                 {
 
                 }

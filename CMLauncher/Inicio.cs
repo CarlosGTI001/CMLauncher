@@ -815,7 +815,7 @@ namespace CMLauncher
             var json = System.IO.File.ReadAllText(string.Format(Settings.minecraftPath + "versions\\" + version + "\\" + version + ".json"));
 
             versionDArgs = JsonConvert.DeserializeObject<descargarVersion>(json);
-            if (Directory.GetFiles(Settings.minecraftPath + "versions\\" + version + "\\natives\\").Count() < 0){
+            if (Directory.GetFiles(Settings.minecraftPath + "versions\\" + version + "\\natives\\").Count() < 1){
                 LibWin libWin = new LibWin();
                 libWin.obtenerLibreriasNativas(json);
             }

@@ -205,7 +205,9 @@
     <Compile Include="InstalarJava.Designer.cs">
       <DependentUpon>InstalarJava.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modelos\javaMe.cs" />
     <Compile Include="Modelos\libreriasAnteriores.cs" />
+    <Compile Include="Modelos\VersionJava.cs" />
     <Compile Include="Splash.cs">
       <SubType>Form</SubType>
     </Compile>
