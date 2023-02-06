@@ -38,7 +38,6 @@ namespace CMLauncher
         {
             InitializeComponent();
             Settings settings = new Settings();
-            settings.Reset();
             this.FormBorderStyle = FormBorderStyle.None;
             this.Padding = new Padding(borderSize);
             this.BackColor = borderColor;
@@ -315,7 +314,7 @@ namespace CMLauncher
             var javaHome = Environment.GetEnvironmentVariable("JAVA_HOME");
             if (Directory.Exists("java"))
             {
-                if(Directory.GetDirectories("java").Length > 0)
+                if(Directory.GetDirectories("java").Length > 3)
                 {
 
                 }
@@ -466,24 +465,24 @@ namespace CMLauncher
 
         private void Splash_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-        Rectangle rectForm = this.ClientRectangle;
-        int mWidht = rectForm.Width / 2;
-        int mHeight = rectForm.Height / 2;
-        var fbColors = GetFormBoundsColors();
-        //Top Left
-        DrawPath(rectForm, e.Graphics, fbColors.TopLeftColor);
-        //Top Right
-        Rectangle rectTopRight = new Rectangle(mWidht, rectForm.Y, mWidht, mHeight);
-        DrawPath(rectTopRight, e.Graphics, fbColors.TopRightColor);
-        //Bottom Left
-        Rectangle rectBottomLeft = new Rectangle(rectForm.X, rectForm.X + mHeight, mWidht, mHeight);
-        DrawPath(rectBottomLeft, e.Graphics, fbColors.BottomLeftColor);
-        //Bottom Right
-        Rectangle rectBottomRight = new Rectangle(mWidht, rectForm.Y + mHeight, mWidht, mHeight);
-        DrawPath(rectBottomRight, e.Graphics, fbColors.BottomRightColor);
-        //-> SET ROUNDED REGION AND BORDER
-        FormRegionAndBorder(this, borderRadius, e.Graphics, borderColor, borderSize);
+        //    e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        //Rectangle rectForm = this.ClientRectangle;
+        //int mWidht = rectForm.Width / 2;
+        //int mHeight = rectForm.Height / 2;
+        //var fbColors = GetFormBoundsColors();
+        ////Top Left
+        //DrawPath(rectForm, e.Graphics, fbColors.TopLeftColor);
+        ////Top Right
+        //Rectangle rectTopRight = new Rectangle(mWidht, rectForm.Y, mWidht, mHeight);
+        //DrawPath(rectTopRight, e.Graphics, fbColors.TopRightColor);
+        ////Bottom Left
+        //Rectangle rectBottomLeft = new Rectangle(rectForm.X, rectForm.X + mHeight, mWidht, mHeight);
+        //DrawPath(rectBottomLeft, e.Graphics, fbColors.BottomLeftColor);
+        ////Bottom Right
+        //Rectangle rectBottomRight = new Rectangle(mWidht, rectForm.Y + mHeight, mWidht, mHeight);
+        //DrawPath(rectBottomRight, e.Graphics, fbColors.BottomRightColor);
+        ////-> SET ROUNDED REGION AND BORDER
+        //FormRegionAndBorder(this, borderRadius, e.Graphics, borderColor, borderSize);
         }
     }
 }

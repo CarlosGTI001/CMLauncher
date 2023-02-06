@@ -1003,24 +1003,24 @@ namespace CMLauncher
         bordeRedondos BordeRedondos = new bordeRedondos();
         private void Inicio_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            System.Drawing.Rectangle rectForm = this.ClientRectangle;
-            int mWidht = rectForm.Width / 2;
-            int mHeight = rectForm.Height / 2;
-            var fbColors = BordeRedondos.GetFormBoundsColors(this);
-            //Top Left
-            BordeRedondos.DrawPath(rectForm, e.Graphics, fbColors.TopLeftColor, borderRadius);
-            //Top Right
-            System.Drawing.Rectangle rectTopRight = new System.Drawing.Rectangle(mWidht, rectForm.Y, mWidht, mHeight);
-            BordeRedondos.DrawPath(rectTopRight, e.Graphics, fbColors.TopRightColor, borderRadius);
-            //Bottom Left
-            System.Drawing.Rectangle rectBottomLeft = new System.Drawing.Rectangle(rectForm.X, rectForm.X + mHeight, mWidht, mHeight);
-            BordeRedondos.DrawPath(rectBottomLeft, e.Graphics, fbColors.BottomLeftColor, borderRadius);
-            //Bottom Right
-            System.Drawing.Rectangle rectBottomRight = new System.Drawing.Rectangle(mWidht, rectForm.Y + mHeight, mWidht, mHeight);
-            BordeRedondos.DrawPath(rectBottomRight, e.Graphics, fbColors.BottomRightColor, borderRadius);
-            //-> SET ROUNDED REGION AND BORDER
-            BordeRedondos.FormRegionAndBorder(this, borderRadius, e.Graphics, borderColor, borderSize);
+            //e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            //System.Drawing.Rectangle rectForm = this.ClientRectangle;
+            //int mWidht = rectForm.Width / 2;
+            //int mHeight = rectForm.Height / 2;
+            //var fbColors = BordeRedondos.GetFormBoundsColors(this);
+            ////Top Left
+            //BordeRedondos.DrawPath(rectForm, e.Graphics, fbColors.TopLeftColor, borderRadius);
+            ////Top Right
+            //System.Drawing.Rectangle rectTopRight = new System.Drawing.Rectangle(mWidht, rectForm.Y, mWidht, mHeight);
+            //BordeRedondos.DrawPath(rectTopRight, e.Graphics, fbColors.TopRightColor, borderRadius);
+            ////Bottom Left
+            //System.Drawing.Rectangle rectBottomLeft = new System.Drawing.Rectangle(rectForm.X, rectForm.X + mHeight, mWidht, mHeight);
+            //BordeRedondos.DrawPath(rectBottomLeft, e.Graphics, fbColors.BottomLeftColor, borderRadius);
+            ////Bottom Right
+            //System.Drawing.Rectangle rectBottomRight = new System.Drawing.Rectangle(mWidht, rectForm.Y + mHeight, mWidht, mHeight);
+            //BordeRedondos.DrawPath(rectBottomRight, e.Graphics, fbColors.BottomRightColor, borderRadius);
+            ////-> SET ROUNDED REGION AND BORDER
+            //BordeRedondos.FormRegionAndBorder(this, borderRadius, e.Graphics, borderColor, borderSize);
         }
     }
 }

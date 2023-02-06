@@ -44,14 +44,21 @@ namespace CMLauncher
             string[] files = new string[0];
             var Path = "";
             var j = javaVersion;
+            if (!Directory.Exists("java"))
+            {
+                Directory.CreateDirectory("java");
+            }
             List<Item> Files = new List<Item>();
             foreach (var a in j.files)
             {
                 if (a.First.type == "directory")
                 {
+                    Item it = new Item();
+                    it.type = a.First.type;
+                    it.path = a.Name;
                     Console.WriteLine(a.Name);
                     string dir = a.Name;
-                    Directory.CreateDirectory(@"java\" + dir.Replace(@"/", @"\"));
+                    Files.Add(it);
                 }
                 if (a.First.type == "file")
                 {
@@ -59,42 +66,54 @@ namespace CMLauncher
                     Console.WriteLine("|--" + a.Name);
                     it.url = a.First.downloads.raw.url;
                     it.path = @"java\" + a.Name;
+                    it.type = a.First.type;
                     Files.Add(it);
                 }
             }
 
             i = 0;
-
+            backgroundWorker1.ReportProgress(i);
             archivos = Files.Count();
             foreach (var items in Files)
             {
-                
-                Byte[] fileData;
-                if (!System.IO.File.Exists(items.path))
+                if(items.type == "file")
                 {
-                    using (WebClient client = new WebClient())
+                    Byte[] fileData;
+                    if (!System.IO.File.Exists(items.path))
                     {
-                        fileData = client.DownloadData(items.url);
-                    }
-                    using (FileStream fs = new FileStream(items.path.Replace("/", "\\"), FileMode.Create))
-                    {
-                        foreach (byte b in fileData)
+                        using (WebClient client = new WebClient())
                         {
-                            fs.WriteByte(b);
+                            fileData = client.DownloadData(items.url);
                         }
-                        fs.Close();
+                        using (FileStream fs = new FileStream(items.path.Replace("/", "\\"), FileMode.Create))
+                        {
+                            foreach (byte b in fileData)
+                            {
+                                fs.WriteByte(b);
+                            }
+                            fs.Close();
+                        }
                     }
+                    backgroundWorker1.ReportProgress(i);
+                    i++;
                 }
-                backgroundWorker1.ReportProgress(i);
-                i++;
+                else
+                {
+                    Directory.CreateDirectory(@"java\" + items.path.Replace(@"/", @"\"));
+                    backgroundWorker1.ReportProgress(i);
+                    i++;
+                }
+                
             }
             Settings settings = new Settings();
-            settings.javaPath = Directory.GetCurrentDirectory() + "\\java\\bin\\";
+            settings.javaPath = Directory.GetCurrentDirectory() + "\\java\\";
+            settings.Save();
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
 
         private async void MesaBox_Load(object sender, EventArgs e)
         {
-            
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.RunWorkerAsync();
             //Settings settings = new Settings();
