@@ -28,187 +28,187 @@ namespace CMLauncher
         int i = 0;
         public void descargar()
         {
-            WebClient webClient = new WebClient();
-            var json = webClient.DownloadString("https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json");
+            //WebClient webClient = new WebClient();
+            //var json = webClient.DownloadString("https://launchermeta.mojang.com/v1/products/java-runtime/2ec0cc96c44e5a76b9c8b7c39df7210883d12871/all.json");
 
-            var java = JsonConvert.DeserializeObject<java>(json);
-            var urlVersion = "";
-            foreach (var e in java.windowsx86.javaruntimegamma)
-            {
-                urlVersion = e.manifest.url;
-            }
+            //var java = JsonConvert.DeserializeObject<java>(json);
+            //var urlVersion = "";
+            //foreach (var e in java.windowsx64.javaruntimealpha)
+            //{
+            //    urlVersion = e.manifest.url;
+            //}
 
-            var json2 = webClient.DownloadString(urlVersion);
+            //var json2 = webClient.DownloadString(urlVersion);
 
-            var javaVersion = JsonConvert.DeserializeObject<dynamic>(json2);
-            string[] files = new string[0];
-            var Path = "";
-            var j = javaVersion;
-            if (!Directory.Exists("java"))
-            {
-                Directory.CreateDirectory("java");
-            }
-            List<Item> Files = new List<Item>();
-            foreach (var a in j.files)
-            {
-                if (a.First.type == "directory")
-                {
-                    Item it = new Item();
-                    it.type = a.First.type;
-                    it.path = a.Name;
-                    Console.WriteLine(a.Name);
-                    string dir = a.Name;
-                    Files.Add(it);
-                }
-                if (a.First.type == "file")
-                {
-                    Item it = new Item();
-                    Console.WriteLine("|--" + a.Name);
-                    it.url = a.First.downloads.raw.url;
-                    it.path = @"java\" + a.Name;
-                    it.type = a.First.type;
-                    Files.Add(it);
-                }
-            }
+            //var javaVersion = JsonConvert.DeserializeObject<dynamic>(json2);
+            //string[] files = new string[0];
+            //var Path = "";
+            //var j = javaVersion;
+            //if (!Directory.Exists("java"))
+            //{
+            //    Directory.CreateDirectory("java");
+            //}
+            //List<Item> Files = new List<Item>();
+            //foreach (var a in j.files)
+            //{
+            //    if (a.First.type == "directory")
+            //    {
+            //        Item it = new Item();
+            //        it.type = a.First.type;
+            //        it.path = a.Name;
+            //        Console.WriteLine(a.Name);
+            //        string dir = a.Name;
+            //        Files.Add(it);
+            //    }
+            //    if (a.First.type == "file")
+            //    {
+            //        Item it = new Item();
+            //        Console.WriteLine("|--" + a.Name);
+            //        it.url = a.First.downloads.raw.url;
+            //        it.path = @"java\" + a.Name;
+            //        it.type = a.First.type;
+            //        Files.Add(it);
+            //    }
+            //}
 
-            i = 0;
-            backgroundWorker1.ReportProgress(i);
-            archivos = Files.Count();
-            foreach (var items in Files)
-            {
-                if(items.type == "file")
-                {
-                    Byte[] fileData;
-                    if (!System.IO.File.Exists(items.path))
-                    {
-                        using (WebClient client = new WebClient())
-                        {
-                            fileData = client.DownloadData(items.url);
-                        }
-                        using (FileStream fs = new FileStream(items.path.Replace("/", "\\"), FileMode.Create))
-                        {
-                            foreach (byte b in fileData)
-                            {
-                                fs.WriteByte(b);
-                            }
-                            fs.Close();
-                        }
-                    }
-                    backgroundWorker1.ReportProgress(i);
-                    i++;
-                }
-                else
-                {
-                    Directory.CreateDirectory(@"java\" + items.path.Replace(@"/", @"\"));
-                    backgroundWorker1.ReportProgress(i);
-                    i++;
-                }
+            //i = 0;
+            //backgroundWorker1.ReportProgress(i);
+            //archivos = Files.Count();
+            //foreach (var items in Files)
+            //{
+            //    if(items.type == "file")
+            //    {
+            //        Byte[] fileData;
+            //        if (!System.IO.File.Exists(items.path))
+            //        {
+            //            using (WebClient client = new WebClient())
+            //            {
+            //                fileData = client.DownloadData(items.url);
+            //            }
+            //            using (FileStream fs = new FileStream(items.path.Replace("/", "\\"), FileMode.Create))
+            //            {
+            //                foreach (byte b in fileData)
+            //                {
+            //                    fs.WriteByte(b);
+            //                }
+            //                fs.Close();
+            //            }
+            //        }
+            //        backgroundWorker1.ReportProgress(i);
+            //        i++;
+            //    }
+            //    else
+            //    {
+            //        Directory.CreateDirectory(@"java\" + items.path.Replace(@"/", @"\"));
+            //        backgroundWorker1.ReportProgress(i);
+            //        i++;
+            //    }
                 
-            }
-            Settings settings = new Settings();
-            settings.javaPath = Directory.GetCurrentDirectory() + "\\java\\";
-            settings.Save();
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            //}
+            //Settings settings = new Settings();
+            //settings.javaPath = Directory.GetCurrentDirectory() + "\\java\\";
+            //settings.Save();
+            //this.DialogResult = DialogResult.OK;
+            //this.Close();
         }
 
         private async void MesaBox_Load(object sender, EventArgs e)
         {
             backgroundWorker1.WorkerReportsProgress = true;
             backgroundWorker1.RunWorkerAsync();
-            //Settings settings = new Settings();
-            //var url = "https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip";
-            //if (File.Exists("java.zip"))
-            //{
-            //    var tamaño = GetFileSize(url);
-            //    FileInfo infoArchivo = new FileInfo("java.zip");
-            //    if (infoArchivo.Length < tamaño)
-            //    {
-            //        using (WebClient client = new WebClient())
-            //        {
-            //            // Habilitamos la opción de "descarga resumible"
-            //            client.Headers.Add("Accept-Ranges", "bytes");
+            Settings settings = new Settings();
+            var url = "https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip";
+            if (System.IO.File.Exists("java.zip"))
+            {
+                var tamaño = GetFileSize(url);
+                FileInfo infoArchivo = new FileInfo("java.zip");
+                if (infoArchivo.Length < tamaño)
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        // Habilitamos la opción de "descarga resumible"
+                        client.Headers.Add("Accept-Ranges", "bytes");
 
-            //            // Establecemos el evento que se disparará cada vez que se descargue un trozo del archivo
-            //            client.DownloadProgressChanged += Client_DownloadProgressChanged;
+                        // Establecemos el evento que se disparará cada vez que se descargue un trozo del archivo
+                        client.DownloadProgressChanged += Client_DownloadProgressChanged;
 
-            //            // Descargamos el archivo
-            //            await client.DownloadFileTaskAsync(new Uri(url), "java.zip");
-            //        }
-            //        ZipFile.ExtractToDirectory("java.zip", "runtime");
-            //        if (Directory.GetDirectories("runtime").Count() > 0)
-            //        {
-            //            string[] carpetas = Directory.GetDirectories("runtime");
-            //            string directorio;
-            //            foreach (string dir in carpetas)
-            //            {
-            //                settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
-            //            }
-            //            //foreach (var m in Directory.GetDirectories("runtime"))
-            //            //{
-            //            //    m.ToString();
-            //            //}
-            //        }
-            //        this.DialogResult = DialogResult.OK;
-            //    }
-            //    else
-            //    {
-            //        if(!Directory.Exists("runtime") || Directory.GetDirectories("runtime").Count() < 1)
-            //        {
-            //            ZipFile.ExtractToDirectory("java.zip", "runtime");
-            //            this.DialogResult = DialogResult.OK;
-            //        }
-            //        if (Directory.GetDirectories("runtime").Count() > 0)
-            //        {
-            //            string[] carpetas = Directory.GetDirectories("runtime");
-            //            string directorio;
-            //            foreach (string dir in carpetas)
-            //            {
-            //                settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
-            //            }
-            //            //foreach (var m in Directory.GetDirectories("runtime"))
-            //            //{
-            //            //    m.ToString();
-            //            //}
-            //        }
-            //        this.DialogResult = DialogResult.OK;
-            //    }
-            //}
-            //else
-            //{
-            //    using (WebClient client = new WebClient())
-            //    {
-            //        // Habilitamos la opción de "descarga resumible"
-            //        client.Headers.Add("Accept-Ranges", "bytes");
+                        // Descargamos el archivo
+                        await client.DownloadFileTaskAsync(new Uri(url), "java.zip");
+                    }
+                    ZipFile.ExtractToDirectory("java.zip", "runtime");
+                    if (Directory.GetDirectories("runtime").Count() > 0)
+                    {
+                        string[] carpetas = Directory.GetDirectories("runtime");
+                        string directorio;
+                        foreach (string dir in carpetas)
+                        {
+                            settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
+                        }
+                        //foreach (var m in Directory.GetDirectories("runtime"))
+                        //{
+                        //    m.ToString();
+                        //}
+                    }
+                    this.DialogResult = DialogResult.OK;
+                }
+                else
+                {
+                    if (!Directory.Exists("runtime") || Directory.GetDirectories("runtime").Count() < 1)
+                    {
+                        ZipFile.ExtractToDirectory("java.zip", "runtime");
+                        this.DialogResult = DialogResult.OK;
+                    }
+                    if (Directory.GetDirectories("runtime").Count() > 0)
+                    {
+                        string[] carpetas = Directory.GetDirectories("runtime");
+                        string directorio;
+                        foreach (string dir in carpetas)
+                        {
+                            settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
+                        }
+                        //foreach (var m in Directory.GetDirectories("runtime"))
+                        //{
+                        //    m.ToString();
+                        //}
+                    }
+                    this.DialogResult = DialogResult.OK;
+                }
+            }
+            else
+            {
+                using (WebClient client = new WebClient())
+                {
+                    // Habilitamos la opción de "descarga resumible"
+                    client.Headers.Add("Accept-Ranges", "bytes");
 
-            //        // Establecemos el evento que se disparará cada vez que se descargue un trozo del archivo
-            //        client.DownloadProgressChanged += Client_DownloadProgressChanged;
+                    // Establecemos el evento que se disparará cada vez que se descargue un trozo del archivo
+                    client.DownloadProgressChanged += Client_DownloadProgressChanged;
 
-            //        // Descargamos el archivo
-            //        await client.DownloadFileTaskAsync(new Uri(url), "java.zip");
-            //    }
+                    // Descargamos el archivo
+                    await client.DownloadFileTaskAsync(new Uri(url), "java.zip");
+                }
 
-            //    //descomprimir java
-            //    ZipFile.ExtractToDirectory("java.zip", "runtime");
-            //    if(Directory.GetDirectories("runtime").Count() > 0)
-            //    {
-            //        string[] carpetas = Directory.GetDirectories("runtime");
-            //        string directorio;
-            //        foreach(string dir in carpetas)
-            //        {
-            //            settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
-            //        }
-            //        //foreach (var m in Directory.GetDirectories("runtime"))
-            //        //{
-            //        //    m.ToString();
-            //        //}
-            //    }
+                //descomprimir java
+                ZipFile.ExtractToDirectory("java.zip", "runtime");
+                if (Directory.GetDirectories("runtime").Count() > 0)
+                {
+                    string[] carpetas = Directory.GetDirectories("runtime");
+                    string directorio;
+                    foreach (string dir in carpetas)
+                    {
+                        settings.javaPath = Directory.GetCurrentDirectory() + "\\" + dir;
+                    }
+                    //foreach (var m in Directory.GetDirectories("runtime"))
+                    //{
+                    //    m.ToString();
+                    //}
+                }
 
-            //    settings.Save();
-            //    this.DialogResult = DialogResult.OK;
-            //}
-            //settings.Save();
-            //this.DialogResult = DialogResult.OK;
+                settings.Save();
+                this.DialogResult = DialogResult.OK;
+            }
+            settings.Save();
+            this.DialogResult = DialogResult.OK;
 
         }
 
